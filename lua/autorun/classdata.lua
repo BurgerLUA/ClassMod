@@ -77,16 +77,16 @@ Class[5]["icon"] = "models/Combine_Soldier.mdl"
 
 Class[6] = {}
 Class[6]["name"] = "Zombie"
-Class[6]["description"] = "Zombies gain +1% health every second and damage enemies that get too close due to their superbacterial flesh. Zombies are also 200% weaker to headshots but 10% resistant to everywhere else."
-Class[6]["health"] = 75
-Class[6]["armor"] = 75
+Class[6]["description"] = "Zombies gain +1 health and armor every 3 seconds and damage enemies based on distance in a 300 unit radius due to their superbacterial flesh. Zombies are also 200% weaker to headshots but 10% resistant to everywhere else. Zombies cannot heal."
+Class[6]["health"] = 60
+Class[6]["armor"] = 60
 Class[6]["stamina"] = 15
 Class[6]["walkspeedmul"] = 0.75
 Class[6]["runspeedmul"] = 0.75
 Class[6]["jumpmul"] = 0.75
 Class[6]["crouchmul"] = 1
 Class[6]["fallmul"] = 1.25
-Class[6]["perks"] = {"LifeRegen","BrainDamage","ArcLight"}
+Class[6]["perks"] = {"DeadLife","BrainDamage","ArcLight","Necro"}
 Class[6]["color"] = Color(180,125,125,255)
 Class[6]["icon"] = "models/Zombie/Classic.mdl"
 
@@ -178,7 +178,7 @@ Class[12]["crouchmul"] = 1
 Class[12]["fallmul"] = 3
 Class[12]["perks"] = {"FlakJacketMajor"}
 Class[12]["color"] = Color(0,100,100,255)
-Class[12]["icon"] = "models/vortigaunt.mdl"
+Class[12]["icon"] = "models/player/ct_gign.mdl"
 
 Class[13] = {}
 Class[13]["name"] = "Soldier"
@@ -257,7 +257,7 @@ Class[17]["icon"] = "models/stalker.mdl"
 
 Class[18] = {}
 Class[18]["name"] = "Survivor"
-Class[18]["description"] = "For every 4 points of health lost, you gain 1% bonus damage. Survivors also regain health slowly over time."
+Class[18]["description"] = "For every 4 points of health lost, you gain 1% bonus damage. Survivors also regain health slowly over time. Survivors also block 20-50 damage from bullets that hit the back."
 Class[18]["health"] = 100
 Class[18]["armor"] = 0
 Class[18]["stamina"] = 25
@@ -266,7 +266,7 @@ Class[18]["runspeedmul"] =0.75
 Class[18]["jumpmul"] = 1
 Class[18]["crouchmul"] = 1
 Class[18]["fallmul"] = 1
-Class[18]["perks"] = {"Survivor","LifeRegen"}
+Class[18]["perks"] = {"Survivor","LifeRegen","BackDoor"}
 Class[18]["color"] = Color(100,100,0,255)
 Class[18]["icon"] = "models/monk.mdl"
 
@@ -302,7 +302,7 @@ Class[20]["icon"] = "models/player/gman_high.mdl"
 
 Class[21] = {}
 Class[21]["name"] = "Allah Snackbar"
-Class[21]["description"] = "Allah Snackbars are equipped with explosive charges linked with their heartbeat. If their heart is unresponsive, they explode similar to an explosion of a C4 charge."
+Class[21]["description"] = "Allah Snackbars are equipped with explosive charges linked with their heartbeat. If their heart is unresponsive, they explode similar to an explosion of a C4 charge. Snackbars also do 10% bonus damage with explosives."
 Class[21]["health"] = 100
 Class[21]["armor"] = 10
 Class[21]["stamina"] = 20
@@ -311,9 +311,85 @@ Class[21]["runspeedmul"] = 0.95
 Class[21]["jumpmul"] = 1
 Class[21]["crouchmul"] = 1
 Class[21]["fallmul"] = 1
-Class[21]["perks"] = {"Snackbar"}
+Class[21]["perks"] = {"Snackbar","Explosive"}
 Class[21]["color"] = Color(255,200,225,255)
 Class[21]["icon"] = "models/player/t_phoenix.mdl"
+
+Class[22] = {}
+Class[22]["name"] = "Blood"
+Class[22]["description"] = "Bloods have a 40% chance to inflict bleeding damage that drains health and stamina based on 10% of the damage dealt."
+Class[22]["health"] = 100
+Class[22]["armor"] = 0
+Class[22]["stamina"] = 25
+Class[22]["walkspeedmul"] = 1.05
+Class[22]["runspeedmul"] = 1.05
+Class[22]["jumpmul"] = 1
+Class[22]["crouchmul"] = 1
+Class[22]["fallmul"] = 1
+Class[22]["perks"] = {"Drain"}
+Class[22]["color"] = Color(150,0,0,255)
+Class[22]["icon"] = "models/vortigaunt.mdl"
+
+Class[23] = {}
+Class[23]["name"] = "Spy"
+Class[23]["description"] = "Spies can fake their death by creating a holographic corpse while turning invisible. The invisibility lasts until you damage someone. Spies grant a 100% critical strike chance while invisible."
+Class[23]["health"] = 50
+Class[23]["armor"] = 0
+Class[23]["stamina"] = 30
+Class[23]["walkspeedmul"] = 1.1
+Class[23]["runspeedmul"] = 1.1
+Class[23]["jumpmul"] = 1.2
+Class[23]["crouchmul"] = 1
+Class[23]["fallmul"] = 1
+Class[23]["perks"] = {"FakeDeath"}
+Class[23]["color"] = Color(200,100,100,150)
+Class[23]["icon"] = "models/player/spy.mdl"
+
+Class[24] = {}
+Class[24]["name"] = "Leech"
+Class[24]["description"] = "Leeches absorb 1 health per person in a 500 unit radius and adds it on to their health up to 200 health."
+Class[24]["health"] = 50
+Class[24]["armor"] = 0
+Class[24]["stamina"] = 15
+Class[24]["walkspeedmul"] = 0.9
+Class[24]["runspeedmul"] = 0.95
+Class[24]["jumpmul"] = 1
+Class[24]["crouchmul"] = 1
+Class[24]["fallmul"] = 1
+Class[24]["perks"] = {"AuraLeech"}
+Class[24]["color"] = Color(255,100,100,255)
+Class[24]["icon"] = "models/headcrabclassic.mdl"
+
+Class[25] = {}
+Class[25]["name"] = "Mystery"
+Class[25]["description"] = "Mysteries are difficult to shoot and even kill with their tendencies to confuse attackers who look at them. Mysteries also grant 10% evasion chance. Mysteries cannot heal."
+Class[25]["health"] = 40
+Class[25]["armor"] = 0
+Class[25]["stamina"] = 15
+Class[25]["walkspeedmul"] = 1.15
+Class[25]["runspeedmul"] = 1.15
+Class[25]["jumpmul"] = 1.25
+Class[25]["crouchmul"] = 1
+Class[25]["fallmul"] = 1
+Class[25]["perks"] = {"Mystical","Necro","Evasion"}
+Class[25]["color"] = Color(255, 235, 180,255)
+Class[25]["icon"] = "models/dog.mdl"
+
+Class[26] = {}
+Class[26]["name"] = "NIGGER SLAYER"
+Class[26]["description"] = "I am justice incarnate, brought forth to end the lives of those that are wasting breathing air and purge them of their foul presence. I am the NIGGER SLAYER, and you're niggery ends here, now. Drop to your knees and surrender, or you will face a war machine unlike ANY this world has ever seen."
+Class[26]["health"] = 300
+Class[26]["armor"] = 0
+Class[26]["stamina"] = 10
+Class[26]["walkspeedmul"] = 0.6
+Class[26]["runspeedmul"] = 0.6
+Class[26]["jumpmul"] = 1
+Class[26]["crouchmul"] = 1
+Class[26]["fallmul"] = 3
+Class[26]["perks"] = {"Slayer","Necro"}
+Class[26]["color"] = Color(255,233,127,255)
+Class[26]["icon"] = "models/serioussam/sam_stone_bfe.mdl"
+
 
 
 

@@ -1,5 +1,10 @@
+
+
+
 function FirstClassSpawn( ply )
 	ply.NextSwapTime = 0
+	ply.FakeDeathCoolDown = 0
+	ply.Cloaked = false
 	ply.NextTick = 0
 	ply.ClassNumber = 1
 	ply.ClassNumberTo = 1
@@ -30,7 +35,9 @@ function PlayerClassSpawn(ply)
 	
 	ply:SetNWInt("classnum",ply.ClassNumber)
 	
-	CheckPerks(ply)
+	--if ply:IsValid() then 
+	--	CheckPerks(ply)
+	--end
 	
 	local Players = player.GetAll()
 	

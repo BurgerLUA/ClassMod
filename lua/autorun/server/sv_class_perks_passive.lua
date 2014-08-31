@@ -1,9 +1,5 @@
 function CheckPerks(ply)
 
-	if TableSearcher(ply.ClassNumber,"Shield") == true then
-		ply.ItemDurability = 100
-	end
-
 	if TableSearcher(ply.ClassNumber,"LifeRegen") == true then
 		timer.Create( "LifeGainPerkTick" .. ply:EntIndex(), 1, 0, function()
 
@@ -19,6 +15,25 @@ function CheckPerks(ply)
 		end)
 	end
 	
+	if TableSearcher(ply.ClassNumber,"DeadLife") == true then
+		timer.Create( "DeadLifeTick" .. ply:EntIndex(), 3, 0, function()
+
+			if ply:IsValid() == false then timer.Destroy("DeadLifeTick" .. ply:EntIndex()) return end
+			if ply:Alive() == false then timer.Destroy("DeadLifeTick" .. ply:EntIndex()) return end
+			if TableSearcher(ply.ClassNumber,"DeadLife") == false then timer.Destroy("DeadLifeTick" .. ply:EntIndex()) return end
+	
+			if ply:Health() < 60 then
+				ply:SetHealth(ply:Health() + 1)
+			end
+			
+			if ply:Armor() < 60 then
+				ply:SetArmor(ply:Armor() + 1)
+			end
+
+		end)
+	end
+	
+
 	if TableSearcher(ply.ClassNumber,"ArcLight") == true then
 		timer.Create( "ArcLightTick" .. ply:EntIndex(), 0.5, 0, function()
 
@@ -61,6 +76,31 @@ function CheckPerks(ply)
 		end)
 	end
 	
+	if TableSearcher(ply.ClassNumber,"AuraLeech") == true then
+		timer.Create( "AuraLeech" .. ply:EntIndex(), 3, 0, function()
+			if ply:IsValid() == false then timer.Destroy("AuraLeech" .. ply:EntIndex()) return end
+			if ply:Alive() == false then timer.Destroy("AuraLeech" .. ply:EntIndex()) return end
+			if TableSearcher(ply.ClassNumber,"AuraLeech") == false then timer.Destroy("AuraLeech" .. ply:EntIndex()) return end
+			
+			
+			local result = ents.FindInSphere(ply:GetPos(),500)
+			local resultCount = table.Count(result)
+
+			for i=1, resultCount do
+				if result[i]:IsPlayer() == true then
+					if result[i] ~= ply then
+						result[i]:TakeDamage(1,ply,ply)
+
+						if ply:Health() < 200 then
+							ply:SetHealth(ply:Health() + 1)
+						else
+							ply:SetHealth(200)
+						end
+					end
+				end
+			end
+		end)
+	end
 	
 	if TableSearcher(ply.ClassNumber,"LifeSteal") == true then	
 		timer.Create( "HealthDecay" .. ply:EntIndex(), 3, 0, function()
@@ -71,6 +111,53 @@ function CheckPerks(ply)
 			ply:SetHealth(ply:Health() - 1)
 		end)
 	end
+	
+	if TableSearcher(ply.ClassNumber,"Mystical") == true then
+		timer.Create( "MysticalTick" .. ply:EntIndex(), 0.1, 0, function()
+			if ply:IsValid() == false then timer.Destroy("MysticalTick" .. ply:EntIndex()) return end
+			if ply:Alive() == false then timer.Destroy("MysticalTick" .. ply:EntIndex()) return end
+			if TableSearcher(ply.ClassNumber,"Mystical") == false then timer.Destroy("HealthDecay" .. ply:EntIndex()) return end
+			
+			for i =1, table.Count(player.GetAll()) do
+				local players =  player.GetAll()
+				
+				if players[i]:GetEyeTrace().Entity == ply then
+					players[i]:SendLua("if SERVER then return end LocalPlayer():SetEyeAngles(LocalPlayer():EyeAngles() + Angle(math.Rand(-0.5,0.5),math.Rand(-0.5,0.5),0))")
+				end
+			end
+		end)
+	end
+	
+	
+	if TableSearcher(ply.ClassNumber,"Slayer") == true then
+	
+		ply.LastFrags = ply:Frags()
+	
+		timer.Create( "SlayerTick" .. ply:EntIndex(), 0.5, 0, function()
+			if ply:IsValid() == false then timer.Destroy("SlayerTick" .. ply:EntIndex()) return end
+			if TableSearcher(ply.ClassNumber,"Slayer") == false then timer.Destroy("SlayerTick" .. ply:EntIndex()) return end
+			if ply:Alive() == false then timer.Destroy("SlayerTick" .. ply:EntIndex()) return end
+			
+			
+			if ply:Frags() > ply.LastFrags then
+				ply.LastFrags = ply:Frags()
+				
+				if ply:Health() + 20 <= 300 then
+					ply:SetHealth(ply:Health()+20)
+				else
+					ply:SetHealth(300)
+				end
+			else
+				if ply:Health() > 1 then
+					ply:SetHealth(ply:Health()-1)
+				else
+					ply:Kill()
+				end
+			end
+		end)
+	end
+	
+	
 	
 	
 	if TableSearcher(ply.ClassNumber,"Snackbar") == true then	
@@ -158,10 +245,7 @@ function CheckPerks(ply)
 			else
 				ply:SetMaterial("")
 			end
-
-			
 		end)
-		
 	end
 	
 	if TableSearcher(ply.ClassNumber,"Necro") then
@@ -243,4 +327,5 @@ function CheckPerks(ply)
 			
 		end)
 	end
+	
 end
