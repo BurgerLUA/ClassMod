@@ -11,7 +11,7 @@ function SVSprintThink()
 		local WalkSpeed = Class[ply.ClassNumber]["walkspeedmul"] * GetConVar("bur_class_walkspeed"):GetInt()
 		local RunSpeed = Class[ply.ClassNumber]["runspeedmul"] * GetConVar("bur_class_runspeed"):GetInt()
 		
-		if ply:KeyDown(IN_SPEED) then
+		if ply:KeyDown(IN_SPEED) and ply:GetVelocity():Length() > 0 then
 			if ply.Energy >= 0.2 then 
 				if ply.NextTick < CurTime() then 
 					ply.NextTick = CurTime() + 0.2

@@ -245,17 +245,32 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 		end
 
 		if TableSearcher(ply.ClassNumber,"FakeDeath") == true then --MUST BE LAST
-			if dmginfo:GetBaseDamage()*DamageScale > ply:Health() then	
+			if hitgroup == HITGROUP_HEAD then
+				secretmul = 2
+			else
+				secretmul = 1
+			end
+			
+			if dmginfo:GetBaseDamage()*DamageScale*secretmul > ply:Health() then	
 				if ply.FakeDeathCoolDown < CurTime() then
 					ply.FakeDeathCoolDown = CurTime() + 10
 					DamageScale=DamageScale*0
 					ply:CreateRagdoll()
+					net.Start( "PlayerKilledByPlayer" )
+		
+						net.WriteEntity( ply )
+						net.WriteString( dmginfo:GetAttacker():GetActiveWeapon():GetClass() )
+						net.WriteEntity( dmginfo:GetAttacker() )
+		
+					net.Broadcast()
+					
+					
 					timer.Simple(0.01,function()
 						ply:SetMaterial("models/effects/vol_light001")
 					end)
 
 					
-					ply:GetActiveWeapon():SetMaterial("models/effects/vol_light001")
+					ply:GetViewModel():SetMaterial("models/effects/vol_light001")
 					ply.Cloaked = true
 				end
 			end
@@ -265,12 +280,13 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 		
 		
 		if TableSearcher(dmginfo:GetAttacker().ClassNumber,"FakeDeath") == true then
-			if ply.Cloaked == true then 
+			if dmginfo:GetAttacker().Cloaked == true then 
 				dmginfo:GetAttacker():SetMaterial("")
-				--dmginfo:GetAttacker():GetActiveWeapon():SetMaterial("")
+				dmginfo:GetAttacker():GetViewModel():SetMaterial("")
 				DamageScale = DamageScale*2
 				ply:EmitSound("player/crit_received1.wav",100,100)
 				dmginfo:GetAttacker():EmitSound("player/crit_hit.wav",100,100)
+				dmginfo:GetAttacker().Cloaked = false
 			end
 		end
 		

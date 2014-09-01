@@ -17,7 +17,9 @@ CreateConVar("bur_class_jumppower", "200", FCVAR_REPLICATED + FCVAR_NOTIFY + FCV
 function ChangeClass( ply, cmd, args )
 
 	local num = tonumber(args[1])
-	
+
+
+
 	
 	
 	if type(num) ~= "number" then return end

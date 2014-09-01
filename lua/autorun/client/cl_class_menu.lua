@@ -2,8 +2,6 @@ function ClassSelectorDerma()
 
 	LocalPlayer().SelectedClass = LocalPlayer():GetNWInt("classnum")
 	
-	
-	
 
 	local MenuBase = vgui.Create("DFrame")
 		MenuBase:SetSize(800,600)

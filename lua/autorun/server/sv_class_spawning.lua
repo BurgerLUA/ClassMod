@@ -67,3 +67,9 @@ function PlayerClassSpawn(ply)
 end
 
 hook.Add("PlayerSpawn", "Player Class Spawn", PlayerClassSpawn)
+
+function AlertKill(victim,num,kill,killer,team)
+	return "Victim", 0, "kill", "Killer", 1001
+end
+
+hook.Add("AddDeathNotice","Alert Kill",AlertKill)

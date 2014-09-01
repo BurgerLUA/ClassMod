@@ -225,13 +225,13 @@ function CheckPerks(ply)
 				
 				if ply.MoveSpeed < 10 then
 					ply:SetMaterial("models/effects/vol_light001")
-					--ply:GetActiveWeapon():SetMaterial("models/effects/vol_light001")
+					ply:GetViewModel():SetMaterial("models/effects/vol_light001")
 				elseif ply.MoveSpeed < 70 then
 					ply:SetMaterial("models/shadertest/predator")
-					--ply:GetActiveWeapon():SetMaterial("models/shadertest/predator")
+					ply:GetViewModel():SetMaterial("models/shadertest/predator")
 				else
 					ply:SetMaterial("")
-				--	ply:GetActiveWeapon():SetMaterial("")
+					ply:GetViewModel():SetMaterial("")
 				end
 				
 				
@@ -269,6 +269,7 @@ function CheckPerks(ply)
 				ent:SetPos(ply:GetPos() + Vector(0,0,30))
 				ent:SetAngles(ply:GetAngles())
 				ent:SetOwner(ply)
+				ent:EnableCollisions(false)
 				ent:Spawn()
 				ent:Activate()
 				
