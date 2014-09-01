@@ -247,7 +247,7 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 		if TableSearcher(ply.ClassNumber,"FakeDeath") == true then --MUST BE LAST
 			if dmginfo:GetBaseDamage()*DamageScale > ply:Health() then	
 				if ply.FakeDeathCoolDown < CurTime() then
-					ply.FakeDeathCoolDown = CurTime() + 1
+					ply.FakeDeathCoolDown = CurTime() + 10
 					DamageScale=DamageScale*0
 					ply:CreateRagdoll()
 					timer.Simple(0.01,function()
@@ -265,7 +265,7 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 		
 		
 		if TableSearcher(dmginfo:GetAttacker().ClassNumber,"FakeDeath") == true then
-			if ply.Cloaked == false then 
+			if ply.Cloaked == true then 
 				dmginfo:GetAttacker():SetMaterial("")
 				--dmginfo:GetAttacker():GetActiveWeapon():SetMaterial("")
 				DamageScale = DamageScale*2
