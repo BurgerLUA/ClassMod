@@ -356,7 +356,7 @@ Class[24]["runspeedmul"] = 0.95
 Class[24]["jumpmul"] = 1
 Class[24]["crouchmul"] = 1
 Class[24]["fallmul"] = 1
-Class[24]["perks"] = {"AuraLeech"}
+Class[24]["perks"] = {"AuraLeech","Necro"}
 Class[24]["color"] = Color(255,100,100,255)
 Class[24]["icon"] = "models/headcrabclassic.mdl"
 
