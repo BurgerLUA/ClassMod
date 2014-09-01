@@ -116,7 +116,7 @@ function CheckPerks(ply)
 		timer.Create( "MysticalTick" .. ply:EntIndex(), 0.1, 0, function()
 			if ply:IsValid() == false then timer.Destroy("MysticalTick" .. ply:EntIndex()) return end
 			if ply:Alive() == false then timer.Destroy("MysticalTick" .. ply:EntIndex()) return end
-			if TableSearcher(ply.ClassNumber,"Mystical") == false then timer.Destroy("HealthDecay" .. ply:EntIndex()) return end
+			if TableSearcher(ply.ClassNumber,"Mystical") == false then timer.Destroy("MysticalTick" .. ply:EntIndex()) return end
 			
 			for i =1, table.Count(player.GetAll()) do
 				local players =  player.GetAll()
@@ -127,6 +127,37 @@ function CheckPerks(ply)
 			end
 		end)
 	end
+	
+	if TableSearcher(ply.ClassNumber,"Bleedout") == true then
+		ply.HealthTick=0
+		
+		ParticleEffectAttach("unusual_zap_yellow", PATTACH_POINT_FOLLOW, ply, ply:LookupAttachment("chest"))
+		ParticleEffectAttach("unusual_robot_orbiting_sparks", PATTACH_POINT_FOLLOW, ply, ply:LookupAttachment("chest"))
+
+		
+		
+		timer.Create( "BleedoutTick" .. ply:EntIndex(), 0.1, 0, function()
+			if ply:IsValid() == false then ply:StopParticles(); timer.Destroy("BleedoutTick" .. ply:EntIndex()) return end
+			if ply:Alive() == false then ply:StopParticles();  timer.Destroy("BleedoutTick" .. ply:EntIndex()) return end
+			if TableSearcher(ply.ClassNumber,"Bleedout") == false then ply:StopParticles(); timer.Destroy("BleedoutTick" .. ply:EntIndex()) return end
+			if ply:GetVelocity():Length() > 0 then
+				ply:TakeDamage(ply:GetVelocity():Length()/1000,ply,ply)
+			else
+				if ply.HealthTick >= 5 then
+					if ply:Health() < 100 then
+						ply:SetHealth(ply:Health() +1)
+					else
+						ply:SetHealth(100)
+					end
+					ply.HealthTick = 0
+				else
+					ply.HealthTick = ply.HealthTick + 1
+				end
+			end
+		end)
+	end
+	
+	
 	
 	
 	if TableSearcher(ply.ClassNumber,"Slayer") == true then

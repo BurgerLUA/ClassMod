@@ -10,7 +10,6 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 			dmginfo:ScaleDamage(0)
 		return end
 		
-		
 		if TableSearcher(dmginfo:GetAttacker().ClassNumber,"Splash") == true then
 			local result = ents.FindInSphere(ply:GetPos(),1000)
 			local resultCount = table.Count(result)
@@ -32,7 +31,6 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 			end
 		end
 		
-		
 		if TableSearcher(dmginfo:GetAttacker().ClassNumber,"Stunner") == true && math.Rand(0,100) >= 100 - (dmginfo:GetBaseDamage()/2) then
 			DamageScale = 2
 			ply:EmitSound("player/crit_received1.wav",100,100)
@@ -46,7 +44,7 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 		end
 		
 		if TableSearcher(ply.ClassNumber,"DamageTrade") == true then
-			DamageScale = DamageScale*1.2
+			DamageScale = DamageScale*1.3
 		end
 		
 		if TableSearcher(dmginfo:GetAttacker().ClassNumber,"DamageTrade") == true then
@@ -60,31 +58,24 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 				if ply:Alive() == false then return end
 				if ply.NextSwapTime <= CurTime() then
 					ply.NextSwapTime = CurTime() + 60
-
 					local Players = player.GetAll()
 					local rand = math.random(1,table.Count(Players))
 					local toSwap = Players[rand]
-					
 					if toSwap == ply then
 						if rand+1<= table.Count(Players) then
 							toSwap = Players[rand+1]
-							--print("debug" ..debugnum)
 							debugnum = rand+1
 						elseif rand-1 >= 1 then 
 							debugnum = rand-1
-							--print("debug" .. debugnum)
 							toSwap = Players[rand-1]
 						else
 							print("weird")
 						end
 					end
-					
 					local pos1 = ply:GetPos()
 					local pos2 = toSwap:GetPos()
-					
 					ply:SetPos(pos2)
 					toSwap:SetPos(pos1)
-					
 					ply:EmitSound("ambient/machines/teleport4.wav",100,100)
 					toSwap:EmitSound("ambient/machines/teleport4.wav",100,100)
 				end
@@ -145,17 +136,13 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 		
 		if TableSearcher(ply.ClassNumber,"Shield") == true and math.random(0,100) >= 40 then
 			DamageBlock = math.Rand(1,5)	
-			
 			if dmginfo:GetBaseDamage() - DamageBlock <= 0 then
 				ply:EmitSound("weapons/fx/rics/ric"..math.Rand(1,5)..".wav",100,100)
 			else
 				ply:EmitSound("player/bhit_helmet-1.wav",100,math.Rand(90,110))
 			end
-			
 			dmginfo:SubtractDamage(DamageBlock)
-
 		end
-	
 		
 		if TableSearcher(dmginfo:GetAttacker().ClassNumber,"AP") == true then
 			if ply:Armor() > 0 then
@@ -164,7 +151,6 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 			end
 		end
 
-		
 		if TableSearcher(ply.ClassNumber,"BrainDamage") == true then
 			if hitgroup == HITGROUP_HEAD then
 				DamageScale = DamageScale*3
@@ -173,7 +159,6 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 				DamageScale = DamageScale*0.85
 			end
 		end
-		
 		
 		if TableSearcher(dmginfo:GetAttacker().ClassNumber,"HeadshotHunter") == true then
 			if hitgroup == HITGROUP_HEAD then
@@ -187,12 +172,10 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 		if TableSearcher(dmginfo:GetAttacker().ClassNumber,"ReflectDamage") == true then
 			DamageScale = DamageScale*0.75
 		end
-		
-		
+	
 		if TableSearcher(ply.ClassNumber,"ReflectDamage") == true then
 			DamageScale = DamageScale*0.9
 			if TableSearcher(dmginfo:GetAttacker().ClassNumber,"ReflectDamage") == false then
-				
 				dmginfo:GetAttacker():TakeDamage(dmginfo:GetBaseDamage()*DamageScale*0.1, ply, dmginfo:GetAttacker():GetActiveWeapon())
 			end
 		end
@@ -219,8 +202,6 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 			end
 		end
 		
-		
-		
 		if TableSearcher(dmginfo:GetAttacker().ClassNumber,"Drain") == true and math.random(0,100) >= 60 then
 			if ply.Energy - dmginfo:GetBaseDamage()*DamageScale*0.1 > 0 then
 				ply.Energy = ply.Energy - dmginfo:GetBaseDamage()*DamageScale*0.1
@@ -229,7 +210,6 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 			else
 				ply.Energy = 0
 			end
-
 			DamageScale = DamageScale*1.1
 		end
 
@@ -240,7 +220,6 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 			else
 				ply:SetHealth(ply:Health() + DamageScale * dmginfo:GetBaseDamage() )
 			end
-
 			DamageScale = DamageScale*0
 		end
 
@@ -250,34 +229,24 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 			else
 				secretmul = 1
 			end
-			
 			if dmginfo:GetBaseDamage()*DamageScale*secretmul > ply:Health() then	
 				if ply.FakeDeathCoolDown < CurTime() then
 					ply.FakeDeathCoolDown = CurTime() + 10
 					DamageScale=DamageScale*0
 					ply:CreateRagdoll()
 					net.Start( "PlayerKilledByPlayer" )
-		
 						net.WriteEntity( ply )
 						net.WriteString( dmginfo:GetAttacker():GetActiveWeapon():GetClass() )
 						net.WriteEntity( dmginfo:GetAttacker() )
-		
 					net.Broadcast()
-					
-					
 					timer.Simple(0.01,function()
 						ply:SetMaterial("models/effects/vol_light001")
 					end)
-
-					
 					ply:GetViewModel():SetMaterial("models/effects/vol_light001")
 					ply.Cloaked = true
 				end
 			end
 		end
-		
-		--print(dmginfo:GetAttacker().ClassName)
-		
 		
 		if TableSearcher(dmginfo:GetAttacker().ClassNumber,"FakeDeath") == true then
 			if dmginfo:GetAttacker().Cloaked == true then 
@@ -289,23 +258,16 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 				dmginfo:GetAttacker().Cloaked = false
 			end
 		end
-		
-		
+			
 		if TableSearcher(ply.ClassNumber,"BackDoor") == true then
 			ang1 = ply:GetAngles().y
 			ang2 = dmginfo:GetAttacker():GetAngles().y
-			
 			damageblock = math.random(20,50)
-
 			if ang1 - ang2 < 45 and ang1 - ang2 > -45 and dmginfo:GetDamageType() == 4098 then --4098 is bullets
-				
 				ply:EmitSound("weapons/fx/rics/ric"..math.random(1,5)..".wav",50,100)
 				dmginfo:GetAttacker():EmitSound("weapons/fx/rics/ric"..math.random(1,5)..".wav",50,100)
-					
-				dmginfo:SubtractDamage(damageblock)
-					
+				dmginfo:SubtractDamage(damageblock)	
 			end
-			
 		end
 		
 		dmginfo:ScaleDamage(DamageScale)
