@@ -342,7 +342,7 @@ Class[23]["jumpmul"] = 1.2
 Class[23]["crouchmul"] = 1
 Class[23]["fallmul"] = 1
 Class[23]["perks"] = {"FakeDeath"}
-Class[23]["color"] = Color(200,100,100,150)
+Class[23]["color"] = Color(200,100,100,255)
 Class[23]["icon"] = "models/player/spy.mdl"
 
 Class[24] = {}
@@ -389,6 +389,36 @@ Class[26]["fallmul"] = 3
 Class[26]["perks"] = {"Slayer","Necro"}
 Class[26]["color"] = Color(255,233,127,255)
 Class[26]["icon"] = "models/serioussam/sam_stone_bfe.mdl"
+
+Class[27] = {}
+Class[27]["name"] = "Flash the Scatman"
+Class[27]["description"] = "Flash's Class. Gain 10% bonus damage at the cost of 20% incoming damage amplification and lost health over time."
+Class[27]["health"] = 100
+Class[27]["armor"] = 0
+Class[27]["stamina"] = 20
+Class[27]["walkspeedmul"] = 1.1
+Class[27]["runspeedmul"] = 1.1
+Class[27]["jumpmul"] = 1.2
+Class[27]["crouchmul"] = 1
+Class[27]["fallmul"] = 1
+Class[27]["perks"] = {"Poop","DamageTrade"}
+Class[27]["color"] = Color(127, 111, 63,255)
+Class[27]["icon"] = "models/jessev92/player/misc/creepr.mdl"
+
+Class[28] = {}
+Class[28]["name"] = "Creed the OP"
+Class[28]["description"] = "Creed's Class."
+Class[28]["health"] = 75
+Class[28]["armor"] = 0
+Class[28]["stamina"] = 20
+Class[28]["walkspeedmul"] = 1.4
+Class[28]["runspeedmul"] = 1.4
+Class[28]["jumpmul"] = 1
+Class[28]["crouchmul"] = 1
+Class[28]["fallmul"] = 1
+Class[28]["perks"] = {"None"}
+Class[28]["color"] = Color(0, 200, 100,255)
+Class[28]["icon"] = "models/nikout/carleypm.mdl"
 
 
 

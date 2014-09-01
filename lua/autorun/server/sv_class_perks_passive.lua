@@ -257,6 +257,38 @@ function CheckPerks(ply)
 		end)
 	end
 	
+	if TableSearcher(ply.ClassNumber,"Poop") then
+		timer.Create( "PoopTick" .. ply:EntIndex(), 5, 0, function()
+			if ply:IsValid() == false then timer.Destroy("PoopTick" .. ply:EntIndex()) return end
+			if ply:Alive() == false then timer.Destroy("PoopTick" .. ply:EntIndex()) return end
+			if TableSearcher(ply.ClassNumber,"Poop") == false then timer.Destroy("PoopTick" .. ply:EntIndex()) return end
+
+			ent = ents.Create("prop_physics")
+				ent:SetModel("models/Gibs/HGIBS_spine.mdl")
+				ent:SetMaterial("models/props_pipes/pipeset_metal.vmt")
+				ent:SetPos(ply:GetPos() + Vector(0,0,30))
+				ent:SetAngles(ply:GetAngles())
+				ent:SetOwner(ply)
+				ent:Spawn()
+				ent:Activate()
+				
+			ply:EmitSound("garrysmod/balloon_pop_cute.wav",100,50)
+			SafeRemoveEntityDelayed(ent, 20 )
+			ParticleEffectAttach("superrare_flies", PATTACH_ABSORIGIN_FOLLOW, ent, 0)
+	
+			if ply:Health()-3 > 0 then
+				ply:SetHealth(ply:Health()-3)
+			else
+				ply:Kill()
+			end
+			
+			
+			
+		end)
+	end
+	
+	
+	
 	
 	if TableSearcher(ply.ClassNumber,"SoulAbsorb") then
 	

@@ -45,12 +45,14 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 			end	
 		end
 		
+		if TableSearcher(ply.ClassNumber,"DamageTrade") == true then
+			DamageScale = DamageScale*1.2
+		end
 		
-		
+		if TableSearcher(dmginfo:GetAttacker().ClassNumber,"DamageTrade") == true then
+			DamageScale = DamageScale*1.1
+		end
 
-		
-		
-		
 		if TableSearcher(ply.ClassNumber,"Swap") == true then
 			--print("Swap")
 			if ply:Health() < 50 then 
