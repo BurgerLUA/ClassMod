@@ -253,7 +253,6 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 					timer.Simple(0.01,function()
 						ply:SetMaterial("models/effects/vol_light001")
 					end)
-				
 
 					
 					ply:GetActiveWeapon():SetMaterial("models/effects/vol_light001")
@@ -266,11 +265,13 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 		
 		
 		if TableSearcher(dmginfo:GetAttacker().ClassNumber,"FakeDeath") == true then
-			dmginfo:GetAttacker():SetMaterial("")
-			--dmginfo:GetAttacker():GetActiveWeapon():SetMaterial("")
-			DamageScale = DamageScale*2
-			ply:EmitSound("player/crit_received1.wav",100,100)
-			dmginfo:GetAttacker():EmitSound("player/crit_hit.wav",100,100)
+			if ply.Cloaked == false then 
+				dmginfo:GetAttacker():SetMaterial("")
+				--dmginfo:GetAttacker():GetActiveWeapon():SetMaterial("")
+				DamageScale = DamageScale*2
+				ply:EmitSound("player/crit_received1.wav",100,100)
+				dmginfo:GetAttacker():EmitSound("player/crit_hit.wav",100,100)
+			end
 		end
 		
 		
