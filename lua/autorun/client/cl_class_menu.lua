@@ -16,6 +16,14 @@ function ClassSelectorDerma()
 			draw.RoundedBox( 8, 0, 0, MenuBase:GetWide(), MenuBase:GetTall(), Color( 0, 0, 0, 150 ) )
 		end
 		MenuBase:MakePopup()
+		
+	local Showoff = vgui.Create("DLabel")
+		Showoff:SetParent(MenuBase)
+		Showoff:SetPos(50,60)
+		Showoff:SetFont("DermaLarge")
+		Showoff:SetText("Class Count: " .. table.Count(Class))
+		Showoff:SizeToContents(true)
+		
 
 
 	local MenuBar = vgui.Create( "DMenuBar")
@@ -213,27 +221,6 @@ end
 
 
 concommand.Add("selectclass", ClassSelectorDerma)
-
-
-function ClSprintThink()
-	if LocalPlayer():KeyDown(IN_SPEED) then
-		--print("run nigga")
-		LocalPlayer():SetNWBool("IsSprinting", true) 
-	elseif LocalPlayer():KeyReleased(IN_SPEED) then
-		LocalPlayer():SetNWBool("IsSprinting", false) 
-	end
-end
-
-
-hook.Add("Think", "Clientside Sprint Think", ClSprintThink)
-
-
-
-
-
-
-
-
 
 function ClassChat( ply, strText, bTeamOnly, bPlayerIsDead )
 

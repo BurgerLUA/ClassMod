@@ -32,65 +32,6 @@ function CheckPerks(ply)
 
 		end)
 	end
-	
-	if TableSearcher(ply.ClassNumber,"DoubleJump") == true then
-
-		timer.Create( "DoubleJumpTick" .. ply:EntIndex(), 0, 0, function()
-			if ply:IsValid() == false then timer.Destroy("DoubleJumpTick" .. ply:EntIndex()) return end
-			if ply:Alive() == false then timer.Destroy("DoubleJumpTick" .. ply:EntIndex()) return end
-			if TableSearcher(ply.ClassNumber,"DoubleJump") == false then timer.Destroy("DoubleJumpTick" .. ply:EntIndex()) return end
-
-			--Code taken from _Kilburn
-			hook.Add("KeyPress", "DoubleJump", function(pl, k)
-				if not pl or not pl:IsValid() or k~=2 then
-					return
-				end
-		
-				if not pl.Jumps or pl:IsOnGround() then
-					pl.Jumps=0
-				end
-	
-				if pl.Jumps==2 then return end
-				
-		
-				pl.Jumps = pl.Jumps + 1
-				
-				if pl.Jumps==2 then
-				
-					if pl.Energy < 5 then return end
-				
-					pl.Energy = pl.Energy - 5
-				
-				
-					if math.random(1,100) > 80 then
-						pl:EmitSound("vo/scout_apexofjump0"..math.random(1,4)..".wav",100,100)
-					end
-				
-					local ang = pl:GetAngles()
-					local forward, right = ang:Forward(), ang:Right()
-		
-					local vel = -1 * pl:GetVelocity() -- Nullify current velocity
-					vel = vel + Vector(0, 0, 300) -- Add vertical force
-		
-					local spd = pl:GetMaxSpeed()
-		
-					if pl:KeyDown(IN_FORWARD) then
-						vel = vel + forward * spd
-					elseif pl:KeyDown(IN_BACK) then
-						vel = vel - forward * spd
-					end
-		
-					if pl:KeyDown(IN_MOVERIGHT) then
-						vel = vel + right * spd
-					elseif pl:KeyDown(IN_MOVELEFT) then
-						vel = vel - right * spd
-					end
-		
-					pl:SetVelocity(vel)
-				end
-			end)
-		end)
-	end
 
 	if TableSearcher(ply.ClassNumber,"ArcLight") == true then
 		timer.Create( "ArcLightTick" .. ply:EntIndex(), 0.5, 0, function()

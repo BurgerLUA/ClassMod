@@ -26,8 +26,8 @@ hook.Add( "HUDShouldDraw", "HUDHide", HUDHide )
 print("Updated")
 
 if CLIENT then
-	squaremat = Material("vgui/gradient_down")
-	circlemat = Material("widgets/disc.png")
+	squaremat = Material("vgui/writealphaonly")
+	circlemat = Material("vgui/icon_checkbox_empty")
 end
 
 
