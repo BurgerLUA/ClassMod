@@ -4,7 +4,7 @@ function ClassSelectorDerma()
 	
 
 	local MenuBase = vgui.Create("DFrame")
-		MenuBase:SetSize(800,600)
+		MenuBase:SetSize(800,ScrH())
 		MenuBase:SetPos(0,0)
 		MenuBase:SetTitle("Class Selection")
 		MenuBase:SetDeleteOnClose(false)
@@ -33,7 +33,7 @@ function ClassSelectorDerma()
 		
 		
 	local Scroll = vgui.Create( "DScrollPanel", MenuBase )
-		Scroll:SetSize( 700,450 )
+		Scroll:SetSize( 700,ScrH() - 150 )
 		Scroll:SetPos( 50, 100 )
 		
 	checkbox = {}

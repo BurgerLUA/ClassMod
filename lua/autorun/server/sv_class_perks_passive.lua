@@ -201,7 +201,7 @@ function CheckPerks(ply)
 			if ply:GetVelocity():Length() > 0 then
 				ply:TakeDamage(ply:GetVelocity():Length()/1000,ply,ply)
 			else
-				if ply.HealthTick >= 5 then
+				if ply.HealthTick >= 3 then
 					if ply:Health() < 100 then
 						ply:SetHealth(ply:Health() +1)
 					else
