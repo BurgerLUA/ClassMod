@@ -33,6 +33,64 @@ function CheckPerks(ply)
 		end)
 	end
 	
+	if TableSearcher(ply.ClassNumber,"DoubleJump") == true then
+
+		timer.Create( "DoubleJumpTick" .. ply:EntIndex(), 0, 0, function()
+			if ply:IsValid() == false then timer.Destroy("DoubleJumpTick" .. ply:EntIndex()) return end
+			if ply:Alive() == false then timer.Destroy("DoubleJumpTick" .. ply:EntIndex()) return end
+			if TableSearcher(ply.ClassNumber,"DoubleJump") == false then timer.Destroy("DoubleJumpTick" .. ply:EntIndex()) return end
+
+			--Code taken from _Kilburn
+			hook.Add("KeyPress", "DoubleJump", function(pl, k)
+				if not pl or not pl:IsValid() or k~=2 then
+					return
+				end
+		
+				if not pl.Jumps or pl:IsOnGround() then
+					pl.Jumps=0
+				end
+	
+				if pl.Jumps==2 then return end
+				
+		
+				pl.Jumps = pl.Jumps + 1
+				
+				if pl.Jumps==2 then
+				
+					if pl.Energy < 5 then return end
+				
+					pl.Energy = pl.Energy - 5
+				
+				
+					if math.random(1,100) > 80 then
+						pl:EmitSound("vo/scout_apexofjump0"..math.random(1,4)..".wav",100,100)
+					end
+				
+					local ang = pl:GetAngles()
+					local forward, right = ang:Forward(), ang:Right()
+		
+					local vel = -1 * pl:GetVelocity() -- Nullify current velocity
+					vel = vel + Vector(0, 0, 300) -- Add vertical force
+		
+					local spd = pl:GetMaxSpeed()
+		
+					if pl:KeyDown(IN_FORWARD) then
+						vel = vel + forward * spd
+					elseif pl:KeyDown(IN_BACK) then
+						vel = vel - forward * spd
+					end
+		
+					if pl:KeyDown(IN_MOVERIGHT) then
+						vel = vel + right * spd
+					elseif pl:KeyDown(IN_MOVELEFT) then
+						vel = vel - right * spd
+					end
+		
+					pl:SetVelocity(vel)
+				end
+			end)
+		end)
+	end
 
 	if TableSearcher(ply.ClassNumber,"ArcLight") == true then
 		timer.Create( "ArcLightTick" .. ply:EntIndex(), 0.5, 0, function()
@@ -131,8 +189,8 @@ function CheckPerks(ply)
 	if TableSearcher(ply.ClassNumber,"Bleedout") == true then
 		ply.HealthTick=0
 		
-		ParticleEffectAttach("unusual_zap_yellow", PATTACH_POINT_FOLLOW, ply, ply:LookupAttachment("chest"))
-		ParticleEffectAttach("unusual_robot_orbiting_sparks", PATTACH_POINT_FOLLOW, ply, ply:LookupAttachment("chest"))
+		--ParticleEffectAttach("unusual_zap_yellow", PATTACH_POINT_FOLLOW, ply, ply:LookupAttachment("chest"))
+		--ParticleEffectAttach("unusual_robot_orbiting_sparks", PATTACH_POINT_FOLLOW, ply, ply:LookupAttachment("chest"))
 
 		
 		
@@ -294,27 +352,46 @@ function CheckPerks(ply)
 			if ply:Alive() == false then timer.Destroy("PoopTick" .. ply:EntIndex()) return end
 			if TableSearcher(ply.ClassNumber,"Poop") == false then timer.Destroy("PoopTick" .. ply:EntIndex()) return end
 
+			
+			
 			ent = ents.Create("prop_physics")
 				ent:SetModel("models/Gibs/HGIBS_spine.mdl")
 				ent:SetMaterial("models/props_pipes/pipeset_metal.vmt")
 				ent:SetPos(ply:GetPos() + Vector(0,0,30))
 				ent:SetAngles(ply:GetAngles())
 				ent:SetOwner(ply)
-				ent:EnableCollisions(false)
+				ent:SetCollisionGroup( COLLISION_GROUP_DEBRIS )
 				ent:Spawn()
 				ent:Activate()
+			
+			for i = 1, 5 do
+				timer.Simple(i+math.Rand(1,14), function() ent:EmitSound("ambient/creatures/flies"..i..".wav") end)
+			end
 				
-			ply:EmitSound("garrysmod/balloon_pop_cute.wav",100,50)
+			
 			SafeRemoveEntityDelayed(ent, 20 )
 			ParticleEffectAttach("superrare_flies", PATTACH_ABSORIGIN_FOLLOW, ent, 0)
+			ParticleEffectAttach("drg_pipe_smoke", PATTACH_ABSORIGIN_FOLLOW, ent, 0)
+		
+			local amount = math.Rand(-3,3)
+			
+			ply:EmitSound("garrysmod/balloon_pop_cute.wav",100,50 + amount*3)
 	
-			if ply:Health()-3 > 0 then
-				ply:SetHealth(ply:Health()-3)
+			if amount > 0 then
+				if ply:Health() + amount < 100 then
+					ply:SetHealth(ply:Health() + amount)
+				else
+					ply:SetHealth(100)
+				end
+			elseif amount < 0 then
+				if (ply:Health() + amount) > 0 then
+					ply:SetHealth(ply:Health() + amount)
+				else
+					ply:Kill()
+				end
 			else
-				ply:Kill()
+			
 			end
-			
-			
 			
 		end)
 	end

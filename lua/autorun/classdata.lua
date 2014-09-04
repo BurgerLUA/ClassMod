@@ -47,7 +47,7 @@ Class[3]["icon"] = "models/player/t_leet.mdl"
 
 Class[4] = {}
 Class[4]["name"] = "Runner"
-Class[4]["description"] = ""
+Class[4]["description"] = "Gains the double jump ability which allows the player to jump twice in the air."
 Class[4]["health"] = 75
 Class[4]["armor"] = 0
 Class[4]["stamina"] = 40
@@ -56,7 +56,7 @@ Class[4]["runspeedmul"] = 1.5
 Class[4]["jumpmul"] = 2
 Class[4]["crouchmul"] = 1
 Class[4]["fallmul"] = 0.1
-Class[4]["perks"] = {"none"}
+Class[4]["perks"] = {"DoubleJump"}
 Class[4]["color"] = Color(255,100,100,255)
 Class[4]["icon"] = "models/player/p2_chell.mdl"
 
@@ -327,7 +327,7 @@ Class[22]["jumpmul"] = 1
 Class[22]["crouchmul"] = 1
 Class[22]["fallmul"] = 1
 Class[22]["perks"] = {"Drain"}
-Class[22]["color"] = Color(150,0,0,255)
+Class[22]["color"] = Color(180,0,0,255)
 Class[22]["icon"] = "models/vortigaunt.mdl"
 
 Class[23] = {}
@@ -377,12 +377,12 @@ Class[25]["icon"] = "models/dog.mdl"
 
 Class[26] = {}
 Class[26]["name"] = "NIGGER SLAYER"
-Class[26]["description"] = "I am justice incarnate, brought forth to end the lives of those that are wasting breathing air and purge them of their foul presence. I am the NIGGER SLAYER, and you're niggery ends here, now. Drop to your knees and surrender, or you will face a war machine unlike ANY this world has ever seen."
+Class[26]["description"] = "I am justice incarnate, brought forth to end the lives of those that are wasting breathing air and purge them of their foul presence. I am the NIGGER SLAYER, and you're niggery ends here, now. Drop to your knees and surrender, or you will face a war machine unlike ANY this world has ever seen. Nigger slayers start off with high health but loose it over time. 20 health is regained every kill."
 Class[26]["health"] = 300
 Class[26]["armor"] = 0
 Class[26]["stamina"] = 10
-Class[26]["walkspeedmul"] = 0.5
-Class[26]["runspeedmul"] = 0.5
+Class[26]["walkspeedmul"] = 0.4
+Class[26]["runspeedmul"] = 0.4
 Class[26]["jumpmul"] = 1
 Class[26]["crouchmul"] = 1
 Class[26]["fallmul"] = 3
@@ -391,8 +391,8 @@ Class[26]["color"] = Color(255,233,127,255)
 Class[26]["icon"] = "models/serioussam/sam_stone_bfe.mdl"
 
 Class[27] = {}
-Class[27]["name"] = "Amplified"
-Class[27]["description"] = "Flash's Class. Gain 10% bonus damage at the cost of 30% incoming damage amplification."
+Class[27]["name"] = "Scatman"
+Class[27]["description"] = "Flash's Class. Gain 10% bonus damage at the cost of 30% incoming damage amplification. Scatmen gain health or loose health every 3 seconds. "
 Class[27]["health"] = 100
 Class[27]["armor"] = 0
 Class[27]["stamina"] = 20
@@ -407,16 +407,16 @@ Class[27]["icon"] = "models/jessev92/player/misc/creepr.mdl"
 
 Class[28] = {}
 Class[28]["name"] = "Supercharged"
-Class[28]["description"] = " Creed's Class. Gains the supercharged perk, gives insane amount of agility in sacrifice of damage over time. Health regenerates when standing still. Cannot be healed by other means."
+Class[28]["description"] = " Creed's Class. Gains the supercharged perk, gives insane amount of agility in sacrifice of damage over time. Health regenerates when standing still. Gains the double jump ability which allows the player to jump twice in the air. Cannot be healed by other means."
 Class[28]["health"] = 100
 Class[28]["armor"] = 20
-Class[28]["stamina"] = 60
+Class[28]["stamina"] = 20
 Class[28]["walkspeedmul"] = 1.75
 Class[28]["runspeedmul"] = 1.75
 Class[28]["jumpmul"] = 2
 Class[28]["crouchmul"] = 0.5
 Class[28]["fallmul"] = 0
-Class[28]["perks"] = {"Bleedout","Necro"}
+Class[28]["perks"] = {"Bleedout","Necro","DoubleJump"}
 Class[28]["color"] = Color(255, 255, 0,255)
 Class[28]["icon"] = "models/magnusson.mdl"
 
