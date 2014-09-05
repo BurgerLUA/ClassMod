@@ -4,7 +4,7 @@ function ClassSelectorDerma()
 	
 
 	local MenuBase = vgui.Create("DFrame")
-		MenuBase:SetSize(800,ScrH())
+		MenuBase:SetSize(ScrW(),ScrH())
 		MenuBase:SetPos(0,0)
 		MenuBase:SetTitle("Class Selection")
 		MenuBase:SetDeleteOnClose(false)
@@ -41,17 +41,26 @@ function ClassSelectorDerma()
 		
 		
 	local Scroll = vgui.Create( "DScrollPanel", MenuBase )
-		Scroll:SetSize( 700,ScrH() - 150 )
-		Scroll:SetPos( 50, 100 )
+		Scroll:SetSize( ScrW()*0.90 + 10 , ScrH()*0.8 )
+		Scroll:SetPos( ScrW()*0.05, ScrH()*0.1 )
 		
 	checkbox = {}
 		
+	local List   = vgui.Create( "DIconLayout" )
+		List:SetParent(Scroll)
+		List:SetSize( ScrW()*0.90 , ScrH()*0.8 )
+		List:SetPos( 0, 0 )
+		List:SetSpaceX( ScrW()*0.005 )
+		List:SetSpaceY( ScrW()*0.005 )
+	
+		
+		
 	for i = 1, table.Count(Class) do 
 		local ListItem = vgui.Create( "DPanel" )
-			ListItem:SetSize( 650, 200 ) 
-			ListItem:SetPos(0,i*210 - 200)
+			ListItem:SetSize( ScrW()*0.25 - ScrW()*0.005 - ScrW()*0.1/4, ScrW()*0.25 - ScrW()*0.005 - ScrH()*0.2/4  )
+			--ListItem:SetPos(0,i*210 - 200)
 			ListItem:SetText(i)
-			ListItem:SetParent(Scroll)
+			List:Add(ListItem)
 			ListItem.Paint = function()
 				draw.RoundedBox( 8, 0, 0, ListItem:GetWide(), ListItem:GetTall(), Class[i]["color"] )
 			end
@@ -62,7 +71,7 @@ function ClassSelectorDerma()
 			icon:SetModel( Class[i]["icon"] )	
 			
 		checkbox[i] = vgui.Create( "DCheckBox", ListItem )
-		checkbox[i]:SetPos(175,12.5)
+		checkbox[i]:SetPos(ScrW()*0.25 - ScrW()*0.005 - ScrW()*0.1/4 - 20, 10)
 		checkbox[i].OnChange = function(chkBox)
 			--print("changed")
 			if checkbox[i]:GetChecked() == true then
@@ -91,11 +100,11 @@ function ClassSelectorDerma()
 			
 		local TagBase = vgui.Create("DPanel",ListItem)
 			TagBase:SetPos(0,50)
-			TagBase:SetSize( 650, 200)
+			TagBase:SetSize( ScrW()*0.25 - ScrW()*0.005 - ScrW()*0.1/4, ScrW()*0.25 - ScrW()*0.005 - ScrH()*0.2/4)
 			TagBase.Paint = function()
 				draw.TexturedQuad{
-					texture = surface.GetTextureID "vgui/hsv-brightness",
-					color = Class[i]["color"] ,
+					texture = surface.GetTextureID "vgui/gradient_up",
+					color = Color(0,0,0,255) ,
 					x = 0,
 					y = 0,
 					w = TagBase:GetWide(),
@@ -103,9 +112,10 @@ function ClassSelectorDerma()
 				}
 			end
 			
-		local Scroll2 = vgui.Create( "DScrollPanel", ListItem )
-			Scroll2:SetSize( 200,200 )
-			Scroll2:SetPos( 0, 50 )	
+		local Scroll2 = vgui.Create( "DScrollPanel" )
+			Scroll2:SetParent(TagBase)
+			Scroll2:SetSize( ScrW()*0.25 - ScrW()*0.005 - ScrW()*0.1/4, (ScrW()*0.25 - ScrW()*0.005 - ScrH()*0.2/4 - 50)/3)
+			Scroll2:SetPos( 0, 0 )	
 
 			
 		
@@ -173,33 +183,11 @@ function ClassSelectorDerma()
 		local Tag = {}
 		local x = 0
 		local y = 0
-		for i=1, table.Count(ClassStats) do
-			Tag[i] = vgui.Create( "DLabel" )
-			Tag[i]:SetParent(ListItem)
-			
-			if i <= 3 then
-				x = 0
-				y = i
-			elseif i <= 6 then
-				x = 1
-				y = i-3
-			elseif i <= 9 then
-				x = 2
-				y = i-6
-			end
-			
-			Tag[i]:SetPos( 200 + x*150, 2 + 15*y - 15)
-			Tag[i]:SetSize(0,0)
-			Tag[i]:SetText( ClassStats[i])
-			Tag[i]:SetFont( "Trebuchet18" )
-			Tag[i]:SetDark(true)
-			Tag[i]:SizeToContents(true)
-		end
-		
+
 		local Desc = vgui.Create("DLabel")
-			Desc:SetParent(TagBase)
+			Desc:SetParent(Scroll2)
 			Desc:SetPos(5,5)
-			Desc:SetSize(TagBase:GetWide(),TagBase:GetTall())
+			Desc:SetSize(TagBase:GetWide() - 5 - 20,TagBase:GetTall()*0.5)
 			Desc:SetText( Class[i]["description"] )
 			Desc:SetAutoStretchVertical(true)
 			--Desc:SizeToContents(true)
@@ -208,7 +196,18 @@ function ClassSelectorDerma()
 			Desc:SetWrap(true)
 			
 			
-		
+		for i=1, table.Count(ClassStats) do
+			Tag[i] = vgui.Create( "DLabel" )
+			Tag[i]:SetParent(TagBase)
+			
+			--Tag[i]:SetPos(5,i*18 - 18 + ScrW()*0.25 - ScrW()*0.005 - ScrH()*0.2/4 - 3*18)
+			Tag[i]:SetPos(5,Desc:GetTall()*0.5 + i*18)
+			Tag[i]:SetSize(0,0)
+			Tag[i]:SetText( ClassStats[i])
+			Tag[i]:SetFont( "HudSelectionText" )
+			Tag[i]:SetDark(true)
+			Tag[i]:SizeToContents(true)
+		end
 		
 		
 		
