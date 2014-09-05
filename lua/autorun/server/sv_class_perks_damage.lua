@@ -224,6 +224,11 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 		end
 
 		if TableSearcher(ply.ClassNumber,"FakeDeath") == true then --MUST BE LAST
+		
+			if CurTime() < ply.HealthCoolDown then
+				DamageScale = DamageScale*0
+			end
+		
 			if hitgroup == HITGROUP_HEAD then
 				secretmul = 2
 			else
@@ -232,6 +237,7 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 			if dmginfo:GetBaseDamage()*DamageScale*secretmul > ply:Health() then	
 				if ply.FakeDeathCoolDown < CurTime() then
 					ply.FakeDeathCoolDown = CurTime() + 10
+					ply.HealthCoolDown = CurTime() + 1
 					DamageScale=DamageScale*0
 					ply:CreateRagdoll()
 					net.Start( "PlayerKilledByPlayer" )
