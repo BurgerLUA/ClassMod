@@ -269,8 +269,9 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 			end
 		end
 		
-		
-		
+		if TableSearcher(ply.ClassNumber,"ArmorRegen") == true then
+			ply.ArmorRegenTime = CurTime() + 5
+        end	
 			
 		if TableSearcher(ply.ClassNumber,"BackDoor") == true and math.random(1,100) > 40 then
 			ang1 = ply:GetAngles().y

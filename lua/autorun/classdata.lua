@@ -435,6 +435,20 @@ Class[29]["perks"] = {"Trap"}
 Class[29]["color"] = Color(100, 155, 50,255)
 Class[29]["icon"] = "models/Police.mdl"
 
+Class[30] = {}
+Class[30]["name"] = "Spartan"
+Class[30]["description"] = "Obtain the ability of armor regeneration with a special suit of armor at the cost of stamina. Due to the weight of the armor, your jump height and movement speed is affected."
+Class[30]["health"] = 100
+Class[30]["armor"] = 30
+Class[30]["stamina"] = 17
+Class[30]["walkspeedmul"] = .8
+Class[30]["runspeedmul"] = .8
+Class[30]["jumpmul"] = .75
+Class[30]["crouchmul"] = 1
+Class[30]["fallmul"] = 1.2
+Class[30]["perks"] = {"ArmorRegen"}
+Class[30]["color"] = Color(0, 155, 25,255)
+Class[30]["icon"] = "models/player/lordvipes/haloce/spartan_classic.mdl"
 
 
 

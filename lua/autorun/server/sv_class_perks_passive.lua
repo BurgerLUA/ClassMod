@@ -135,7 +135,7 @@ function CheckPerks(ply)
 
 		
 		
-		timer.Create( "BleedoutTick" .. ply:EntIndex(), 0.1, 0, function()
+		timer.Create( "BleedoutTick" .. ply:EntIndex(), 0.25, 0, function()
 			if ply:IsValid() == false then ply:StopParticles(); timer.Destroy("BleedoutTick" .. ply:EntIndex()) return end
 			if ply:Alive() == false then ply:StopParticles();  timer.Destroy("BleedoutTick" .. ply:EntIndex()) return end
 			if TableSearcher(ply.ClassNumber,"Bleedout") == false then ply:StopParticles(); timer.Destroy("BleedoutTick" .. ply:EntIndex()) return end
@@ -336,7 +336,22 @@ function CheckPerks(ply)
 			
 		end)
 	end
-	
+
+	if TableSearcher(ply.ClassNumber,"ArmorRegen") == true then
+
+		ply.ArmorRegenTime = 0
+ 
+		timer.Create( "ArmRegenPerkTick" .. ply:EntIndex(), 1, 0, function()
+ 
+			if ply:IsValid() == false then timer.Destroy("ArmRegenPerkTick" .. ply:EntIndex()) return end
+			if ply:Alive() == false then timer.Destroy("ArmRegenPerkTick" .. ply:EntIndex()) return end
+			if TableSearcher(ply.ClassNumber,"ArmorRegen") == false then timer.Destroy("ArmRegenPerkTick" .. ply:EntIndex()) return end
+			if ply:Armor() >= 30 then return end
+			if ply.ArmorRegenTime >= CurTime() then return end
+			ply:SetArmor(ply:Armor() + 1)
+ 
+		end)
+	end    
 	
 	
 	
