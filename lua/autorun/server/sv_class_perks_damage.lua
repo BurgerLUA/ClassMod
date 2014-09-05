@@ -265,10 +265,10 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 			end
 		end
 			
-		if TableSearcher(ply.ClassNumber,"BackDoor") == true then
+		if TableSearcher(ply.ClassNumber,"BackDoor") == true and math.random(1,100) > 40 then
 			ang1 = ply:GetAngles().y
 			ang2 = dmginfo:GetAttacker():GetAngles().y
-			damageblock = math.random(20,50)
+			damageblock = math.random(10,30)
 			if ang1 - ang2 < 45 and ang1 - ang2 > -45 and dmginfo:GetDamageType() == 4098 then --4098 is bullets
 				ply:EmitSound("weapons/fx/rics/ric"..math.random(1,5)..".wav",50,100)
 				dmginfo:GetAttacker():EmitSound("weapons/fx/rics/ric"..math.random(1,5)..".wav",50,100)
