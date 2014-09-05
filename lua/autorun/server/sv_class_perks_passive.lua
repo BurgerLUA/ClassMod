@@ -255,13 +255,13 @@ function CheckPerks(ply)
 				
 				if ply.MoveSpeed < 10 then
 					ply:SetMaterial("models/effects/vol_light001")
-					ply:GetViewModel():SetMaterial("models/effects/vol_light001")
+					ply:GetActiveWeapon():SetMaterial("models/effects/vol_light001")
 				elseif ply.MoveSpeed < 70 then
 					ply:SetMaterial("models/shadertest/predator")
-					ply:GetViewModel():SetMaterial("models/shadertest/predator")
+					ply:GetActiveWeapon():SetMaterial("models/shadertest/predator")
 				else
 					ply:SetMaterial("")
-					ply:GetViewModel():SetMaterial("")
+					ply:GetActiveWeapon():SetMaterial("")
 				end
 				
 				
