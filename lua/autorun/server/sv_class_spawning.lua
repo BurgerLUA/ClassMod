@@ -5,6 +5,7 @@ function FirstClassSpawn( ply )
 	ply.NextSwapTime = 0
 	ply.FakeDeathCoolDown = 0
 	ply.Cloaked = false
+	ply.HealthCoolDown = 0
 	ply.NextTick = 0
 	ply.ClassNumber = 1
 	ply.ClassNumberTo = 1
@@ -19,6 +20,7 @@ hook.Add( "PlayerInitialSpawn", "Initialize Class", FirstClassSpawn )
 function PlayerClassSpawn(ply)
 
 	ply.NextTick = 0
+	ply.HealthCoolDown = 0
 
 	if ply.ClassNumber == nil then
 		ply.ClassNumber = 1
