@@ -437,7 +437,7 @@ Class[29]["icon"] = "models/Police.mdl"
 
 Class[30] = {}
 Class[30]["name"] = "Spartan"
-Class[30]["description"] = "Obtain the ability of armor regeneration with a special suit of armor at the cost of stamina. Due to the weight of the armor, your jump height and movement speed is affected."
+Class[30]["description"] = "Obtain the ability of armor regeneration with a special suit of armor at the cost of stamina. Due to the weight of the armor, your jump height and movement speed are affected."
 Class[30]["health"] = 100
 Class[30]["armor"] = 30
 Class[30]["stamina"] = 17
