@@ -348,7 +348,7 @@ function CheckPerks(ply)
 
 		ply.ArmorRegenTime = 0
  
-		timer.Create( "ArmRegenPerkTick" .. ply:EntIndex(), 1, 0, function()
+		timer.Create( "ArmRegenPerkTick" .. ply:EntIndex(), 0.2, 0, function()
  
 			if ply:IsValid() == false then timer.Destroy("ArmRegenPerkTick" .. ply:EntIndex()) return end
 			if ply:Alive() == false then timer.Destroy("ArmRegenPerkTick" .. ply:EntIndex()) return end
