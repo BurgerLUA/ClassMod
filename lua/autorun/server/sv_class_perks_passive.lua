@@ -139,8 +139,13 @@ function CheckPerks(ply)
 			if ply:IsValid() == false then ply:StopParticles(); timer.Destroy("BleedoutTick" .. ply:EntIndex()) return end
 			if ply:Alive() == false then ply:StopParticles();  timer.Destroy("BleedoutTick" .. ply:EntIndex()) return end
 			if TableSearcher(ply.ClassNumber,"Bleedout") == false then ply:StopParticles(); timer.Destroy("BleedoutTick" .. ply:EntIndex()) return end
+			
+			
+			
 			if ply:GetVelocity():Length() > 0 then
-				ply:TakeDamage(ply:GetVelocity():Length()/1000,ply,ply)
+				if ply:IsOnGround() then
+					ply:TakeDamage(ply:GetVelocity():Length()/1000,ply,ply)
+				end
 			else
 				if ply.HealthTick >= 3 then
 					if ply:Health() < 100 then
@@ -153,6 +158,8 @@ function CheckPerks(ply)
 					ply.HealthTick = ply.HealthTick + 1
 				end
 			end
+			
+			
 		end)
 	end
 	
