@@ -27,7 +27,7 @@ print("Updated")
 
 if CLIENT then
 	squaremat = Material("vgui/writealphaonly")
-	circlemat = Material("vgui/icon_checkbox_empty")
+	circlemat = Material("vgui/backpack_rect_mouseover_color")
 end
 
 
