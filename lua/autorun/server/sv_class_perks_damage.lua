@@ -183,7 +183,7 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 		if TableSearcher(ply.ClassNumber,"FlakJacketMajor") == true then
 			if dmginfo:GetDamageType() == DMG_BLAST then
 				DamageScale = DamageScale*0.75
-				dmginfo:GetAttacker():TakeDamage(dmginfo:GetBaseDamage()*0.1), ply, dmginfo:GetAttacker():GetActiveWeapon())
+				dmginfo:GetAttacker():TakeDamage(dmginfo:GetBaseDamage()*0.1, ply, dmginfo:GetAttacker():GetActiveWeapon())
 				ply:EmitSound("player/pl_scout_jump"..math.Rand(1,4)..".wav",50,100)
 			end
 		end
