@@ -92,16 +92,16 @@ Class[6]["icon"] = "models/Zombie/Classic.mdl"
 
 Class[7] = {}
 Class[7]["name"] = "Vampire"
-Class[7]["description"] = "Vampires have the lifesteal ability, which steals 10% of the damage done to another player up to 200% health. If a vampire has more health than his or her maxhealth, then it will drain the health 1% every 3 seconds."
-Class[7]["health"] = 75
+Class[7]["description"] = "Vampires have the lifesteal ability, which steals 20% of the damage done to another player up to 200% health. Vampires slowly take damage over time, which can be fatal. Vampires cannot heal."
+Class[7]["health"] = 100
 Class[7]["armor"] = 0
 Class[7]["stamina"] = 25
-Class[7]["walkspeedmul"] = 1.1
-Class[7]["runspeedmul"] = 1.1
+Class[7]["walkspeedmul"] = 1.05
+Class[7]["runspeedmul"] = 1.05
 Class[7]["jumpmul"] = 1.1
 Class[7]["crouchmul"] = 1
 Class[7]["fallmul"] = 0.9
-Class[7]["perks"] = {"LifeSteal","DoubleJump"}
+Class[7]["perks"] = {"LifeSteal","Necro"}
 Class[7]["color"] = Color(200,0,0,255)
 Class[7]["icon"] = "models/Humans/Group01/Male_Cheaple.mdl"
 
@@ -152,7 +152,7 @@ Class[10]["icon"] = "models/player/corpse1.mdl"
 
 Class[11] = {}
 Class[11]["name"] = "Field Medic"
-Class[11]["description"] = "Field Medics slowly restore all health to himself and to nearby allies on his team."
+Class[11]["description"] = "Field Medics slowly restore 1 health every second to nearby allies on his team. This bonus is doubled on the medic."
 Class[11]["health"] = 110
 Class[11]["armor"] = 0
 Class[11]["stamina"] = 20
@@ -227,7 +227,7 @@ Class[15]["icon"] = "models/player/t_guerilla.mdl"
 
 Class[16] = {}
 Class[16]["name"] = "Anti-Tank"
-Class[16]["description"] = "Turns the enemy against itself by using special armor piercing ammo that does 1% more damage per point of armor. Each attack also steals armor based on 15% of damage dealt, Stacks up to 200 points of armor."
+Class[16]["description"] = "Turns the enemy against itself by using special armor piercing ammo that does 1% more damage per point of armor although overall damage is reduced by 25%. Each attack also steals armor based on 15% of damage dealt, Stacks up to 200 points of armor."
 Class[16]["health"] = 75
 Class[16]["armor"] = 25
 Class[16]["stamina"] = 15
@@ -257,7 +257,7 @@ Class[17]["icon"] = "models/stalker.mdl"
 
 Class[18] = {}
 Class[18]["name"] = "Survivor"
-Class[18]["description"] = "For every 4 points of health lost, you gain 1% bonus damage. Survivors also regain health slowly over time. Survivors also have a 60% chance to block 10-30 damage from bullets that hit the back."
+Class[18]["description"] = "For every 4 points of health lost, you gain 1% bonus damage. Survivors also regain health slowly over time. Survivors also have a 60% chance to block 10-30 damage from behind."
 Class[18]["health"] = 100
 Class[18]["armor"] = 0
 Class[18]["stamina"] = 25
@@ -347,7 +347,7 @@ Class[23]["icon"] = "models/player/spy.mdl"
 
 Class[24] = {}
 Class[24]["name"] = "Leech"
-Class[24]["description"] = "Leeches absorb 1 health per person in a 500 unit radius and adds it on to their health up to 200 health."
+Class[24]["description"] = "Leeches absorb 1 health per person per second in a 500 unit radius and adds it on to their health up to 200 health."
 Class[24]["health"] = 50
 Class[24]["armor"] = 0
 Class[24]["stamina"] = 15
@@ -452,7 +452,7 @@ Class[30]["icon"] = "models/player/lordvipes/haloce/spartan_classic.mdl"
 
 Class[31] = {}
 Class[31]["name"] = "Shatterling"
-Class[31]["description"] = "As long as you have armor, each hit grants 0.2 seconds of damage immunity. Does not work against explosives."
+Class[31]["description"] = "As long as you have armor, each hit against you grants an entire second of damage immunity. During this immunity you are stunned."
 Class[31]["health"] = 50
 Class[31]["armor"] = 100
 Class[31]["stamina"] = 15

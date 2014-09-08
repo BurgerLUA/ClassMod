@@ -65,6 +65,11 @@ function CheckPerks(ply)
 			local Team =  team.GetPlayers(ply:Team())
 			local TeamCount = table.Count(Team)
 			
+			if ply:Health() < ply:GetMaxHealth() then
+				ply:SetHealth(ply:Health()+1)
+			end
+			
+			
 			for i=1, TeamCount do
 				if Team[i]:Alive() == false then return end
 				if Team[i]:Team() == 1001 then return end
@@ -76,7 +81,7 @@ function CheckPerks(ply)
 	end
 	
 	if TableSearcher(ply.ClassNumber,"AuraLeech") == true then
-		timer.Create( "AuraLeech" .. ply:EntIndex(), 3, 0, function()
+		timer.Create( "AuraLeech" .. ply:EntIndex(), 1, 0, function()
 			if ply:IsValid() == false then timer.Destroy("AuraLeech" .. ply:EntIndex()) return end
 			if ply:Alive() == false then timer.Destroy("AuraLeech" .. ply:EntIndex()) return end
 			if TableSearcher(ply.ClassNumber,"AuraLeech") == false then timer.Destroy("AuraLeech" .. ply:EntIndex()) return end
@@ -106,8 +111,11 @@ function CheckPerks(ply)
 			if ply:IsValid() == false then timer.Destroy("HealthDecay" .. ply:EntIndex()) return end
 			if ply:Alive() == false then timer.Destroy("HealthDecay" .. ply:EntIndex()) return end
 			if TableSearcher(ply.ClassNumber,"LifeSteal") == false then timer.Destroy("HealthDecay" .. ply:EntIndex()) return end
-			if ply:Health() <= ply:GetMaxHealth() then return end
-			ply:SetHealth(ply:Health() - 1)
+			if ply:Health() < 1 then
+				ply:SetHealth(ply:Health() - 1)
+			else
+				ply:Kill()
+			end
 		end)
 	end
 	

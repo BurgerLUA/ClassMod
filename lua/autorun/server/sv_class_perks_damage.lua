@@ -30,7 +30,7 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 				end
 			end
 		end
-		
+
 		if TableSearcher(dmginfo:GetAttacker().ClassNumber,"Stunner") == true && math.Rand(0,100) >= 100 - (dmginfo:GetBaseDamage()/2) then
 			DamageScale = 2
 			ply:EmitSound("player/crit_received1.wav",100,100)
@@ -81,10 +81,10 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 
 		
 		if TableSearcher(dmginfo:GetAttacker().ClassNumber,"LifeSteal") == true then
-			if dmginfo:GetAttacker():Health() + math.max(0,dmginfo:GetDamage()*0.1) >= 200 then
+			if dmginfo:GetAttacker():Health() + math.max(0,dmginfo:GetDamage()*0.2) >= 200 then
 				dmginfo:GetAttacker():SetHealth(200)
 			else
-				dmginfo:GetAttacker():SetHealth(dmginfo:GetAttacker():Health() + math.max(0,dmginfo:GetDamage()*0.1) )
+				dmginfo:GetAttacker():SetHealth(dmginfo:GetAttacker():Health() + math.max(0,dmginfo:GetDamage()*0.2) )
 			end
 		end	
 		
@@ -136,15 +136,18 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 			if dmginfo:GetBaseDamage() - DamageBlock <= 0 then
 				ply:EmitSound("weapons/fx/rics/ric"..math.Rand(1,5)..".wav",50,100)
 			else
-				ply:EmitSound("player/bhit_helmet-1.wav",50,math.Rand(90,110))
+				ply:EmitSound("weapons/spy_assassin_knife_impact_02.wav",50,math.Rand(90,110))
 			end
 			dmginfo:SubtractDamage(DamageBlock)
 		end
 		
 		if TableSearcher(dmginfo:GetAttacker().ClassNumber,"AP") == true then
-			if ply:Armor() > 0 then
-				DamageScale = DamageScale + (ply:Armor()*0.005) - 0.25
-				ply:EmitSound("mvm/physics/robo_impact_bullet0"..math.random(1,4)..".wav",50,math.Rand(90,110))
+			DamageScale = DamageScale + (ply:Armor()*0.01) - 0.25
+			print(DamageScale)
+			if DamageScale > 1 then
+				ply:EmitSound("mvm/melee_impacts/arrow_impact_robo0"..math.random(1,3)..".wav",100,100)
+			else
+				ply:EmitSound("mvm/melee_impacts/blade_hit_robo0"..math.random(1,3)..".wav",100,100)
 			end
 		end
 
@@ -227,15 +230,15 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 			end
 		
 			if hitgroup == HITGROUP_HEAD then
-				secretmul = 2
+				secretmul = 3
 			else
 				secretmul = 1
 			end
-			if dmginfo:GetBaseDamage()*DamageScale*secretmul > ply:Health() then	
+			if dmginfo:GetBaseDamage()*DamageScale*secretmul > ply:Health() - 10 then	
 				if ply.FakeDeathCoolDown < CurTime() then
 					ply.FakeDeathCoolDown = CurTime() + 10
 					ply.HealthCoolDown = CurTime() + 1
-					DamageScale=DamageScale*0
+					DamageScale=0
 					ply:CreateRagdoll()
 					net.Start( "PlayerKilledByPlayer" )
 						net.WriteEntity( ply )
@@ -281,31 +284,36 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 			end
 			
 			
-			if ply.Immunity = true then
+			if ply.Immunity == true then
 				DamageScale = DamageScale*0
 			else
 				DamageScale = DamageScale*1.5
 			end
+
+			print(dmginfo:GetDamageType())
 			
-			
-			if dmginfo:GetDamageType() == DMG_BULLET and ply:Armor() > 0 then
+			if ply:Armor() > 0 then
 				if ply.Immunity == false then
 					ply.Immunity = true
-					timer.Simple(0.2,function() ply.Immunity = false end)
+					ply.Stun = 1
+					ply:SetMaterial("brick/brick_model.vmf")
+					ply:EmitSound("weapons/demo_charge_hit_world"..math.random(1,3)..".wav")
+					timer.Simple(1,function() 
+						ply.Immunity = false 
+						ply:SetMaterial("")
+					end)
 				end
 			end
-			
         end	
 		
 		
 		
 		
-			
 		if TableSearcher(ply.ClassNumber,"BackDoor") == true and math.random(1,100) > 40 then
 			ang1 = ply:GetAngles().y
 			ang2 = dmginfo:GetAttacker():GetAngles().y
 			damageblock = math.random(10,30)
-			if ang1 - ang2 < 45 and ang1 - ang2 > -45 and dmginfo:GetDamageType() == 4098 then --4098 is bullets
+			if ang1 - ang2 < 45 and ang1 - ang2 > -45 then
 				ply:EmitSound("weapons/fx/rics/ric"..math.random(1,5)..".wav",50,100)
 				dmginfo:GetAttacker():EmitSound("weapons/fx/rics/ric"..math.random(1,5)..".wav",50,100)
 				dmginfo:SubtractDamage(damageblock)	

@@ -19,10 +19,6 @@ function ChangeClass( ply, cmd, args )
 
 	local num = tonumber(args[1])
 
-
-
-	
-	
 	if type(num) ~= "number" then return end
 	
 	if num <= table.Count(Class) then
@@ -37,12 +33,41 @@ function ChangeClass( ply, cmd, args )
 		ply:Spawn()
 
 	else
-		error("ERROR: CHANGECLASS DOESN'T EXIST")
+		ply:ChatPrint("INVALID CLASS")
 	return end
 	
 end
 
 concommand.Add("changeclass", ChangeClass)
+
+function ForceClass(ply,cmd,args)
+	if ply:IsAdmin() == true or ply:IsSuperAdmin() == true then
+		local victim = tonumber(args[1])
+		local num = tonumber(args[2])
+
+		if type(num) ~= "number" then return end
+	
+		if num <= table.Count(Class) then
+
+			Entity(victim).ClassNumberTo = num
+	
+			Entity(victim).ClassName = Class[num]["name"]
+			Entity(victim).ClassDescription = Class[num]["description"]
+		
+			Entity(victim):ChatPrint("Your class will change to "..Class[num]["name"]..".")
+			--Entity(victim).ClassChanged = true
+			Entity(victim):Spawn()
+			
+			print(Entity(victim):Nick() .. " is now a " .. Class[num]["name"])
+
+		else
+			ply:ChatPrint("INVALID CLASS")
+		return end
+	end
+end
+
+concommand.Add("forceclass", ForceClass)
+
 
 
 function SelectClassMenu( ply )
