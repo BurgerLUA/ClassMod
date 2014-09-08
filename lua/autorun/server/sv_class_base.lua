@@ -36,6 +36,10 @@ function ChangeClass( ply, cmd, args )
 		ply:ChatPrint("INVALID CLASS")
 	return end
 	
+	for k,v in pairs(player.GetAll()) do
+		v:ChatPrint(ply:Nick().." has changed his class to " .. Class[num]["name"] )
+	end
+	
 end
 
 concommand.Add("changeclass", ChangeClass)
