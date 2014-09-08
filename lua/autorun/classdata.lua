@@ -450,6 +450,22 @@ Class[30]["perks"] = {"ArmorRegen"}
 Class[30]["color"] = Color(0, 155, 25,255)
 Class[30]["icon"] = "models/player/lordvipes/haloce/spartan_classic.mdl"
 
+Class[30] = {}
+Class[30]["name"] = "Shatterling"
+Class[30]["description"] = "As long as you have armor, each hit grants 0.2 seconds of damage immunity. Does not work against explosives."
+Class[30]["health"] = 50
+Class[30]["armor"] = 100
+Class[30]["stamina"] = 15
+Class[30]["walkspeedmul"] = 0.6
+Class[30]["runspeedmul"] = 0.6
+Class[30]["jumpmul"] = 0.75
+Class[30]["crouchmul"] = 1
+Class[30]["fallmul"] = 1.2
+Class[30]["perks"] = {"Shatter"}
+Class[30]["color"] = Color(100, 50, 255,255)
+Class[30]["icon"] = "models/bots/heavy_boss/bot_heavy_boss.mdl"
+
+
 
 
 

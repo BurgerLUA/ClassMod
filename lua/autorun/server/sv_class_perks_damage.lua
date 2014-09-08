@@ -272,6 +272,33 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 		if TableSearcher(ply.ClassNumber,"ArmorRegen") == true then
 			ply.ArmorRegenTime = CurTime() + 5
         end	
+		
+		if TableSearcher(ply.ClassNumber,"Shatter") == true then
+		
+			if not ply.Immunity then 
+				ply.Immunity = false
+			end
+			
+			
+			if ply.Immunity = true then
+				DamageScale = DamageScale*0
+			else
+				DamageScale = DamageScale*1.5
+			end
+			
+			
+			if dmginfo:GetDamageType() == DMG_BULLET and ply:Armor() > 0 then
+				if ply.Immunity == false then
+					ply.Immunity = true
+					timer.Simple(0.2,function() ply.Immunity = false end)
+				end
+			end
+			
+        end	
+		
+		
+		
+		
 			
 		if TableSearcher(ply.ClassNumber,"BackDoor") == true and math.random(1,100) > 40 then
 			ang1 = ply:GetAngles().y
