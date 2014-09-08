@@ -273,6 +273,7 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 			ply.ArmorRegenTime = CurTime() + 5
         end	
 		
+		--[[
 		if TableSearcher(ply.ClassNumber,"Shatter") == true then
 		
 			if not ply.Immunity then 
@@ -295,7 +296,7 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 			end
 			
         end	
-		
+		--]]
 		
 		
 		
