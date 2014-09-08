@@ -183,9 +183,10 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 		if TableSearcher(ply.ClassNumber,"FlakJacketMajor") == true then
 			if dmginfo:GetDamageType() == DMG_BLAST then
 				DamageScale = DamageScale*0.75
-				if math.random(1,100) >= 80 and dmginfo:GetBaseDamage() > 30 then
-					dmginfo:GetAttacker():TakeDamage(dmginfo:GetBaseDamage() - 30, ply, dmginfo:GetAttacker():GetActiveWeapon())
-					ply:EmitSound("player/pl_scout_jump"..math.Rand(1,4)..".wav",50,100)
+
+				dmginfo:GetAttacker():TakeDamage(dmginfo:GetBaseDamage()*0.1, ply, dmginfo:GetAttacker():GetActiveWeapon())
+				ply:EmitSound("player/pl_scout_jump"..math.Rand(1,4)..".wav",50,100)
+					
 				end
 			end
 		end
@@ -306,7 +307,14 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 			end
         end	
 		
-		
+		if TableSearcher(dmginfo:GetAttacker().ClassNumber,"Bargain") == true then
+			if dmginfo:GetBaseDamage() - 10 < 0 then
+				dmginfo:SetDamage(1)
+			else
+				dmginfo:SubtractDamage(10)
+				DamagScale = DamageScale*2
+			end
+		end
 		
 		
 		if TableSearcher(ply.ClassNumber,"BackDoor") == true and math.random(1,100) > 40 then
