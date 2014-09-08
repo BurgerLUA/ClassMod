@@ -8,7 +8,7 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 			DamageScale = 0
 			ply:EmitSound("weapons/fx/nearmiss/bulletltor"..math.Rand(10,14)..".wav",100,math.Rand(90,110))
 			dmginfo:ScaleDamage(0)
-		return end
+		end
 		
 		if TableSearcher(dmginfo:GetAttacker().ClassNumber,"Splash") == true then
 			local result = ents.FindInSphere(ply:GetPos(),1000)
@@ -187,7 +187,7 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 				dmginfo:GetAttacker():TakeDamage(dmginfo:GetBaseDamage()*0.1, ply, dmginfo:GetAttacker():GetActiveWeapon())
 				ply:EmitSound("player/pl_scout_jump"..math.Rand(1,4)..".wav",50,100)
 					
-				end
+
 			end
 		end
 		

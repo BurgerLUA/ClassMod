@@ -111,7 +111,7 @@ function CheckPerks(ply)
 			if ply:IsValid() == false then timer.Destroy("HealthDecay" .. ply:EntIndex()) return end
 			if ply:Alive() == false then timer.Destroy("HealthDecay" .. ply:EntIndex()) return end
 			if TableSearcher(ply.ClassNumber,"LifeSteal") == false then timer.Destroy("HealthDecay" .. ply:EntIndex()) return end
-			if ply:Health() < 1 then
+			if ply:Health() > 1 then
 				ply:SetHealth(ply:Health() - 1)
 			else
 				ply:Kill()
