@@ -58,7 +58,7 @@ function ForceClass(ply,cmd,args)
 			Entity(victim).ClassName = Class[num]["name"]
 			Entity(victim).ClassDescription = Class[num]["description"]
 		
-			Entity(victim):ChatPrint("Your class will change to "..Class[num]["name"]..".")
+			--Entity(victim):ChatPrint("Your class will change to "..Class[num]["name"]..".")
 			--Entity(victim).ClassChanged = true
 			Entity(victim):Spawn()
 			
