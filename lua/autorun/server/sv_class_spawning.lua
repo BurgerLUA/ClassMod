@@ -75,3 +75,5 @@ function AlertKill(victim,num,kill,killer,team)
 end
 
 hook.Add("AddDeathNotice","Alert Kill",AlertKill)
+
+print("sv_class_spawning loaded")

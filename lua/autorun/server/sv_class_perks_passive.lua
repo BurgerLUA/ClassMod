@@ -441,3 +441,6 @@ function CheckPerks(ply)
 	end
 	
 end
+
+
+print("sv_class_perks_passive loaded")

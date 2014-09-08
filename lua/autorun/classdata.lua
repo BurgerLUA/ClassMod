@@ -452,7 +452,7 @@ Class[30]["icon"] = "models/player/lordvipes/haloce/spartan_classic.mdl"
 
 Class[31] = {}
 Class[31]["name"] = "Shatterling"
-Class[31]["description"] = "As long as you have armor, each hit against you grants an entire second of damage immunity. During this immunity you are stunned. Shatterlings cannot heal."
+Class[31]["description"] = "As long as you have armor, each hit against you grants an entire second of damage immunity. During this immunity you are stunned. Immune to headshots. Takes 50% extra damage. Shatterlings cannot heal."
 Class[31]["health"] = 50
 Class[31]["armor"] = 100
 Class[31]["stamina"] = 15
@@ -480,10 +480,4 @@ Class[32]["perks"] = {"Bargain"}
 Class[32]["color"] = Color(100, 50, 255,255)
 Class[32]["icon"] = "models/bots/heavy_boss/bot_heavy_boss.mdl"
 
-
-
-
-
-
-
-
+print("classdata loaded")

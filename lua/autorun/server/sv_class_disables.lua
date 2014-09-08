@@ -71,3 +71,5 @@ function ClassDisables()
 end
 
 hook.Add("Think","Class Disables",ClassDisables)
+
+print("sv_class_disables loaded")

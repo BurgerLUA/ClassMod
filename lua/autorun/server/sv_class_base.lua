@@ -1,11 +1,11 @@
---[[
+
 include("sv_class_falldamage.lua")
 include("sv_class_perks_damage.lua")
 include("sv_class_perks_passive.lua")
 include("sv_class_spawning.lua")
 include("sv_class_sprint.lua")
 include("sv_class_tablesearcher.lua")
---]]
+
 
 --AddCSLuaFile( "autorun/client/cl_classmod.lua" )
 
@@ -86,6 +86,8 @@ end
 
 hook.Add("ShowSpare1", "Select Class Menu", SelectClassMenu)
 hook.Add("ShowSpare2", "Select Weapon Menu", SelectWeaponMenu)
+
+print("sv_class_perks_base loaded")
 
 
 

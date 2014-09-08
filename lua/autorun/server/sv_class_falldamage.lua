@@ -22,3 +22,5 @@ function ScaleFallDamage(ply, speed)
 end
 
 hook.Add("GetFallDamage","ScaleFallDamage",ScaleFallDamage)
+
+print("sv_class_falldamage loaded")

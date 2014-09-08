@@ -16,3 +16,4 @@ function TableSearcher(num,tofind)
 	
 return found end
 
+print("sv_class_tablesearcher loaded")

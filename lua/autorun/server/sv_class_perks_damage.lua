@@ -10,10 +10,12 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 			dmginfo:ScaleDamage(0)
 		end
 		
+
+		
 		if TableSearcher(dmginfo:GetAttacker().ClassNumber,"Splash") == true then
 			local result = ents.FindInSphere(ply:GetPos(),1000)
 			local resultCount = table.Count(result)
-			print(result)
+			--print(result)
 			DamageScale = 0.9
 			for i=1, resultCount do
 				if result[i]:IsPlayer() == true then
@@ -132,6 +134,7 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 		
 		
 		if TableSearcher(ply.ClassNumber,"Shield") == true and math.random(0,100) >= 40 then
+			--print("BLOCK")
 			DamageBlock = math.Rand(1,5)	
 			if dmginfo:GetBaseDamage() - DamageBlock <= 0 then
 				ply:EmitSound("weapons/fx/rics/ric"..math.Rand(1,5)..".wav",50,100)
@@ -143,7 +146,7 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 		
 		if TableSearcher(dmginfo:GetAttacker().ClassNumber,"AP") == true then
 			DamageScale = DamageScale + (ply:Armor()*0.01) - 0.25
-			print(DamageScale)
+			--print(DamageScale)
 			if DamageScale > 1 then
 				ply:EmitSound("mvm/melee_impacts/arrow_impact_robo0"..math.random(1,3)..".wav",100,100)
 			else
@@ -276,34 +279,43 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 		
 		
 		if TableSearcher(ply.ClassNumber,"Shatter") == true then
-		
+
 			if not ply.Immunity then 
-				ply.Immunity = false
+				ply.Immunity = 0
 			end
 			
-			
-			if ply.Immunity == true then
-				DamageScale = DamageScale*0
-			else
-				DamageScale = DamageScale*1.5
+			if not ply.BulletHit then
+				ply.BulletHit = 1
 			end
 
-			print(dmginfo:GetDamageType())
-			
 			if ply:Armor() > 0 then
-				if ply.Immunity == false then
-					ply.Immunity = true
+				if ply.Immunity == 0 then
+					ply.Immunity = 1
+					
+					local actualdamage = DamageInfo()
+					actualdamage:SetDamage(dmginfo:GetBaseDamage()*1.5)
+					actualdamage:SetAttacker(dmginfo:GetAttacker())
+					actualdamage:SetInflictor(dmginfo:GetAttacker():GetActiveWeapon())
+					actualdamage:SetDamageType(DMG_BULLET)
+					
+					ply:TakeDamageInfo( actualdamage )
 					ply.Stun = 1
 					ply:SetMaterial("brick/brick_model.vmf")
 					ply:EmitSound("weapons/demo_charge_hit_world"..math.random(1,3)..".wav")
 					timer.Simple(1,function() 
-						ply.Immunity = false 
+						ply.Immunity = 0
 						ply:SetMaterial("")
 					end)
 				end
 			end
+			
+			if ply.Immunity == 1 then
+				DamageScale = DamageScale*0
+			end
+
         end	
 		
+		--[[
 		if TableSearcher(dmginfo:GetAttacker().ClassNumber,"Bargain") == true then
 			if dmginfo:GetBaseDamage() - 10 < 0 then
 				dmginfo:SetDamage(1)
@@ -312,7 +324,7 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 				DamagScale = DamageScale*2
 			end
 		end
-		
+		--]]
 		
 		if TableSearcher(ply.ClassNumber,"BackDoor") == true and math.random(1,100) > 40 then
 			ang1 = ply:GetAngles().y
@@ -334,11 +346,13 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 		end
 
 		ply:SetNWInt(dmginfo:GetAttacker():EntIndex(), ply:GetNWInt(dmginfo:GetAttacker():EntIndex()) + (HiddenScale * DamageScale * dmginfo:GetBaseDamage()))
-
+		
 	end	
+	
 end
-
+--hook.Remove("ScalePlayerDamage","Scale Class Damage")
+--hook.Remove("ScalePlayerDamage","Scale The Class Damage")
 hook.Add("ScalePlayerDamage","Scale Class Damage",ScaleClassDamage)
 
-
+print("sv_class_perks_damage loaded")
 

@@ -115,4 +115,4 @@ hook.Add("Think", "Serverside Sprint Think", SVSprintThink)
 				end
 			end)
 
-
+print("sv_class_sprint loaded")
