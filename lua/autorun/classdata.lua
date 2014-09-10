@@ -477,7 +477,7 @@ Class[32]["jumpmul"] = 0.9
 Class[32]["crouchmul"] = 1
 Class[32]["fallmul"] = 1.1
 Class[32]["perks"] = {"Bargain"}
-Class[32]["color"] = Color(100, 50, 255,255)
-Class[32]["icon"] = "models/bots/heavy_boss/bot_heavy_boss.mdl"
+Class[32]["color"] = Color(100, 200, 100,255)
+Class[32]["icon"] = "models/breen.mdl"
 
 print("classdata loaded")

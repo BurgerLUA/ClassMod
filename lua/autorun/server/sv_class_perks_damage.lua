@@ -283,10 +283,6 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 			if not ply.Immunity then 
 				ply.Immunity = 0
 			end
-			
-			if not ply.BulletHit then
-				ply.BulletHit = 1
-			end
 
 			if ply:Armor() > 0 then
 				if ply.Immunity == 0 then
