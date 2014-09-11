@@ -93,12 +93,14 @@ function CheckPerks(ply)
 			for i=1, resultCount do
 				if result[i]:IsPlayer() == true then
 					if result[i] ~= ply then
-						result[i]:TakeDamage(1,ply,ply)
+						if result[i]:Alive() == true then 
+							result[i]:TakeDamage(1,ply,ply)
 
-						if ply:Health() < 200 then
-							ply:SetHealth(ply:Health() + 1)
-						else
-							ply:SetHealth(200)
+							if ply:Health() < 200 then
+								ply:SetHealth(ply:Health() + 1)
+							else
+								ply:SetHealth(200)
+							end
 						end
 					end
 				end
