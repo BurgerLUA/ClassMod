@@ -231,7 +231,7 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 			end
 		
 			if hitgroup == HITGROUP_HEAD then
-				secretmul = 3
+				secretmul = 0 --basically headshots don't trigger it
 			else
 				secretmul = 1
 			end

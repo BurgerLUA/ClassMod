@@ -28,7 +28,7 @@ function ChangeClass( ply, cmd, args )
 		ply.ClassName = Class[num]["name"]
 		ply.ClassDescription = Class[num]["description"]
 		
-		ply:ChatPrint("Your class will change to "..Class[num]["name"]..".")
+		--ply:ChatPrint("Your class will change to "..Class[num]["name"]..".")
 		--ply.ClassChanged = true
 		ply:Spawn()
 
@@ -36,8 +36,15 @@ function ChangeClass( ply, cmd, args )
 		ply:ChatPrint("INVALID CLASS")
 	return end
 	
+	local message = ply:Nick().." has changed his class to " .. Class[num]["name"]
+	
+	if num == 23 then
+		message = ply:Nick().." has changed his class to " .. Class[math.random(1,22)]["name"]
+	end
+	
+	
 	for k,v in pairs(player.GetAll()) do
-		v:ChatPrint(ply:Nick().." has changed his class to " .. Class[num]["name"] )
+		v:ChatPrint( message )
 	end
 	
 end
