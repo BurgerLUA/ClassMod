@@ -242,6 +242,13 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 					DamageScale=0
 					ply:CreateRagdoll()
 					dmginfo:GetAttacker():AddFrags(1)
+					timer.Simple(5, function()
+						ply:ChatPrint("cocks")
+						dmginfo:GetAttacker():SetFrags(dmginfo:GetAttacker():Frags() - 1)
+					end)
+					
+					
+					
 					net.Start( "PlayerKilledByPlayer" )
 						net.WriteEntity( ply )
 						net.WriteString( dmginfo:GetAttacker():GetActiveWeapon():GetClass() )
@@ -250,9 +257,7 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 					timer.Simple(0.01,function()
 						ply:SetMaterial("models/effects/vol_light001")
 					end)
-					timer.Simple(5, function()
-						dmginfo:GetAttacker():SetFrags(dmginfo:GetAttacker():Frags() - 1)
-					end)
+
 					
 					ply:GetActiveWeapon():SetMaterial("models/effects/vol_light001")
 					ply.Cloaked = true
