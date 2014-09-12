@@ -19,6 +19,8 @@ hook.Add( "PlayerInitialSpawn", "Initialize Class", FirstClassSpawn )
 
 function PlayerClassSpawn(ply)
 
+	ply.Cloaked = false
+
 	ply.NextTick = 0
 	ply.HealthCoolDown = 0
 
