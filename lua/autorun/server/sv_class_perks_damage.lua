@@ -1,6 +1,6 @@
 function ScaleClassDamage( ply, hitgroup, dmginfo )
 
-	local attacker = attacker
+	local attacker = dmginfo:GetAttacker()
 
 	local DamageScale = 1
  
