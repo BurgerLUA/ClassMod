@@ -329,16 +329,16 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 
         end	
 		
-		--[[
+		
 		if TableSearcher(attacker.ClassNumber,"Bargain") == true then
-			if dmginfo:GetBaseDamage() - 10 < 0 then
+			if dmginfo:GetBaseDamage() - 10 <= 0 then
 				dmginfo:SetDamage(1)
 			else
 				dmginfo:SubtractDamage(10)
-				DamagScale = DamageScale*2
+				DamageScale = DamageScale*2
 			end
 		end
-		--]]
+		
 		
 		if TableSearcher(ply.ClassNumber,"BackDoor") == true and math.random(1,100) > 40 then
 			ang1 = ply:GetAngles().y
