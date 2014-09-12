@@ -245,15 +245,15 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 					ply.HealthCoolDown = CurTime() + 1
 					DamageScale=0
 					ply:CreateRagdoll()
-					attacker.OldFrags = attacker:Frags()
+					--attacker.OldFrags = attacker:Frags()
 					
-					attacker:AddFrags(1)
+					--attacker:AddFrags(1)
 					
 					
-					timer.Simple(5, function()
-						ply:ChatPrint("cocks")
-						attacker:SetFrags(attacker.OldFrags)
-					end)
+					--timer.Simple(5, function()
+					--	ply:ChatPrint("cocks")
+					--	attacker:SetFrags(attacker.OldFrags)
+					--end)
 					
 					
 					
