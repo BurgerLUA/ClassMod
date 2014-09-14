@@ -4,6 +4,11 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 
 	local DamageScale = 1
  
+	if hitgroup == HITGROUP_HEAD then
+		HiddenScale = 2
+	else
+		HiddenScale = 1
+	end
 	
  
 	if attacker:IsPlayer() and attacker ~= ply then 
@@ -248,7 +253,7 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 
 					ply:SetArmor(100)
 					
-					timer.Create("cloakrunout"..ply:EntIndex(),0.1, 0 function()
+					timer.Create("cloakrunout"..ply:EntIndex(),0.1, 0, function()
 						if ply:Armor() > 0 and ply:Alive() then
 							ply:SetArmor(ply:Armor()-1)
 							
@@ -344,7 +349,7 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 		end
 		
 		if TableSearcher(ply.ClassNumber,"ArmorDependant") == true then
-			if ply:Armor() - dmginfo:GetBaseDamage() > 0 then
+			if ply:Armor() - HiddenScale*dmginfo:GetBaseDamage()/2 > 0 then
 				DamageScale = 0
 				ply:SetArmor(ply:Armor() - dmginfo:GetBaseDamage())
 			else
@@ -365,12 +370,6 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 		end
 		
 		dmginfo:ScaleDamage(DamageScale)
-		
-		if hitgroup == HITGROUP_HEAD then
-			HiddenScale = 2
-		else
-			HiddenScale = 1
-		end
 
 		ply:SetNWInt(attacker:EntIndex(), ply:GetNWInt(attacker:EntIndex()) + (HiddenScale * DamageScale * dmginfo:GetBaseDamage()))
 		

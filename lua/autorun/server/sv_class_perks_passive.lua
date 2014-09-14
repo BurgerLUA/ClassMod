@@ -357,18 +357,49 @@ function CheckPerks(ply)
 	if TableSearcher(ply.ClassNumber,"ArmorRegen") == true then
 		ply.ArmorRegenTime = 0
 		ply.IsRegening = false
+		ply.BeepArmorTick = 0
+		ply.RegenSound = false
 		
-		timer.Create("ArmRegenAlertTick" .. ply:EntIndex(), 0.5 0 function()
-			if ply.IsRegening = true then
-				ply:EmitSound("armorregening",100)
-			elseif ply:Armor() <= 0 then
-				ply:EmitSound("holyfuck",100)
-			elseif ply:Armor() >= 25 then
-				ply:EmitSound("k this is scarey",100)
+		local regensound = CreateSound(ply, "weapons/gauss/chargeloop.wav" )
+		
+		
+		timer.Create("ArmRegenAlertTick" .. ply:EntIndex(), 0.01, 0, function()
+		if ply:IsValid() == false then regensound:Stop(); timer.Destroy("ArmRegenAlertTick" .. ply:EntIndex()) return end
+		if ply:Alive() == false then regensound:Stop(); timer.Destroy("ArmRegenAlertTick" .. ply:EntIndex()) return end
+		if TableSearcher(ply.ClassNumber,"ArmorRegen") == false then regensound:Stop(); timer.Destroy("ArmRegenAlertTick" .. ply:EntIndex()) return end
+		
+
+		
+			if ply.IsRegening == true then
+				if ply.RegenSound == false then
+					regensound:Play()
+					regensound:ChangeVolume(0.75,0)
+					ply.RegenSound = true
+				end
+			else
+				regensound:Stop()
+				ply.RegenSound = false
 			end
+				
+			if ply:Armor() <= 0 then
+				if ply.BeepArmorTick <= CurTime() then
+					ply.BeepArmorTick = CurTime() + 0.1
+					regensound:Stop()
+					ply:EmitSound("buttons/button17.wav",50,100)
+					--ply.RegenSound = false
+				end
+			elseif ply:Armor() <= 25 then
+				if ply.BeepArmorTick <= CurTime() then
+					regensound:Stop()
+					ply.BeepArmorTick = CurTime() + 0.25
+					ply:EmitSound("buttons/button17.wav",50,125)
+					--ply.RegenSound = false
+				end
+			end
+			
 		end)
  
-		timer.Create( "ArmRegenPerkTick" .. ply:EntIndex(), 1/8, 0, function()
+		timer.Create( "ArmRegenPerkTick" .. ply:EntIndex(), 8/100, 0, function()
  
 			if ply:IsValid() == false then timer.Destroy("ArmRegenPerkTick" .. ply:EntIndex()) return end
 			if ply:Alive() == false then timer.Destroy("ArmRegenPerkTick" .. ply:EntIndex()) return end
@@ -376,6 +407,7 @@ function CheckPerks(ply)
 			if ply:Armor() >= 100 then ply.IsRegening = false return end
 			if ply.ArmorRegenTime >= CurTime() then ply.IsRegening = false return end
 			ply:SetArmor(ply:Armor() + 1)
+			regensound:ChangePitch(50+ply:Armor(),0)
 			ply.IsRegening = true
  
 		end)
