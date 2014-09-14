@@ -66,7 +66,7 @@ function CheckPerks(ply)
 			local TeamCount = table.Count(Team)
 			
 			if ply:Health() < ply:GetMaxHealth() then
-				ply:SetHealth(ply:Health()+1)
+				ply:SetHealth(ply:Health()+2)
 			end
 			
 			
@@ -285,7 +285,7 @@ function CheckPerks(ply)
 				ply.ArmorDrainCount = ply.ArmorDrainCount + 1
 				
 				
-				if ply.ArmorDrainCount >= 30 then
+				if ply.ArmorDrainCount >= 50 then
 					ply.ArmorDrainCount = 0
 					ply:SetArmor(ply:Armor() - 1) 
 				end
@@ -355,17 +355,28 @@ function CheckPerks(ply)
 	end
 
 	if TableSearcher(ply.ClassNumber,"ArmorRegen") == true then
-
 		ply.ArmorRegenTime = 0
+		ply.IsRegening = false
+		
+		timer.Create("ArmRegenAlertTick" .. ply:EntIndex(), 0.5 0 function()
+			if ply.IsRegening = true then
+				ply:EmitSound("armorregening",100)
+			elseif ply:Armor() <= 0 then
+				ply:EmitSound("holyfuck",100)
+			elseif ply:Armor() >= 25 then
+				ply:EmitSound("k this is scarey",100)
+			end
+		end)
  
-		timer.Create( "ArmRegenPerkTick" .. ply:EntIndex(), 0.2, 0, function()
+		timer.Create( "ArmRegenPerkTick" .. ply:EntIndex(), 1/8, 0, function()
  
 			if ply:IsValid() == false then timer.Destroy("ArmRegenPerkTick" .. ply:EntIndex()) return end
 			if ply:Alive() == false then timer.Destroy("ArmRegenPerkTick" .. ply:EntIndex()) return end
 			if TableSearcher(ply.ClassNumber,"ArmorRegen") == false then timer.Destroy("ArmRegenPerkTick" .. ply:EntIndex()) return end
-			if ply:Armor() >= 30 then return end
-			if ply.ArmorRegenTime >= CurTime() then return end
+			if ply:Armor() >= 100 then ply.IsRegening = false return end
+			if ply.ArmorRegenTime >= CurTime() then ply.IsRegening = false return end
 			ply:SetArmor(ply:Armor() + 1)
+			ply.IsRegening = true
  
 		end)
 	end    
@@ -390,7 +401,7 @@ function CheckPerks(ply)
 			
 			--print(ply.SoulsDelivered)
 			
-			if ply.SoulCount > 0 and ply:Armor() < ply.SoulCount*0.1 then	
+			if ply.SoulCount > 0 and ply:Armor() < ply.SoulCount*0.25 then	
 				ply:SetArmor(ply:Armor() + 1)
 			end
 			

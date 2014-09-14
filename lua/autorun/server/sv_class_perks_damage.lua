@@ -8,7 +8,7 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
  
 	if attacker:IsPlayer() and attacker ~= ply then 
 
-		if TableSearcher(ply.ClassNumber,"Evasion") == true && math.random(0,100) >= 90 then
+		if TableSearcher(ply.ClassNumber,"Evasion") == true && math.random(0,100) >= 80 then
 			DamageScale = 0
 			ply:EmitSound("weapons/fx/nearmiss/bulletltor"..math.Rand(10,14)..".wav",100,math.Rand(90,110))
 			dmginfo:ScaleDamage(0)
@@ -20,16 +20,16 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 			local result = ents.FindInSphere(ply:GetPos(),1000)
 			local resultCount = table.Count(result)
 			--print(result)
-			DamageScale = 0.9
+			DamageScale = 1
 			for i=1, resultCount do
 				if result[i]:IsPlayer() == true then
 					--print(result[i]:Nick())
 					if result[i] ~= ply and result[i] ~= attacker then		
 						if result[i]:Team() == attacker:Team() and ply:Team() == 1001 then
-							damage = dmginfo:GetBaseDamage()*0.1
+							damage = dmginfo:GetBaseDamage()*0.25
 							result[i]:TakeDamage(damage,  attacker, attacker:GetActiveWeapon())
 						elseif result[i]:Team() ~= attacker:Team() and ply:Team() ~= 1001 then
-							damage = dmginfo:GetBaseDamage()*0.1
+							damage = dmginfo:GetBaseDamage()*0.25
 							result[i]:TakeDamage(damage,  attacker, attacker:GetActiveWeapon())
 						end
 					end
@@ -95,14 +95,14 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 		end	
 		
 		
-		if TableSearcher(attacker.ClassNumber,"Survivor") == true then
-			DamageScale = 1 + math.abs(attacker:Health()-attacker:GetMaxHealth())/1000
+		if TableSearcher(ply.ClassNumber,"Survivor") == true then
+			DamageScale = 1 - math.Clamp(attacker:GetMaxHealth()-attacker:Health(),0,75)/100
 		end	
 		
 		
 		if TableSearcher(attacker.ClassNumber,"ArmorSteal") == true then
 			if dmginfo:GetDamage()*0.15 < ply:Armor() then 
-				if attacker:Armor() + dmginfo:GetDamage()*0.15 >= 200 then
+				if attacker:Armor() + dmginfo:GetDamage()*0.30 >= 200 then
 					attacker:SetArmor(200)
 				else
 					attacker:SetArmor(attacker:Armor() + dmginfo:GetDamage()*0.15 )
@@ -120,7 +120,7 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 		if TableSearcher(ply.ClassNumber,"Helmet") == true then
 			if hitgroup == HITGROUP_HEAD then
 				ply:EmitSound("player/kevlar"..math.random(1,5)".wav",100,100)
-				DamageScale = DamageScale*0.9
+				DamageScale = DamageScale*0.8
 			else
 				DamageScale = DamageScale*1
 			 end
@@ -131,7 +131,7 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 			if hitgroup == HITGROUP_HEAD then
 				DamageScale = DamageScale*1
 			else
-				DamageScale = DamageScale*0.85
+				DamageScale = DamageScale*0.75
 				ply:EmitSound("player/kevlar"..math.random(1,5)".wav",100,100)
 			end
 		end
@@ -139,7 +139,7 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 		
 		if TableSearcher(ply.ClassNumber,"Shield") == true and math.random(0,100) >= 40 then
 			--print("BLOCK")
-			DamageBlock = math.Rand(1,5)	
+			DamageBlock = math.Rand(1,10)	
 			if dmginfo:GetBaseDamage() - DamageBlock <= 0 then
 				ply:EmitSound("weapons/fx/rics/ric"..math.Rand(1,5)..".wav",50,100)
 			else
@@ -181,15 +181,15 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 		end
 	
 		if TableSearcher(ply.ClassNumber,"ReflectDamage") == true then
-			DamageScale = DamageScale*0.9
+			DamageScale = DamageScale*1
 			if TableSearcher(attacker.ClassNumber,"ReflectDamage") == false then
-				attacker:TakeDamage(dmginfo:GetBaseDamage()*DamageScale*0.1, ply, attacker:GetActiveWeapon())
+				attacker:TakeDamage(dmginfo:GetBaseDamage()*DamageScale*0.25, ply, attacker:GetActiveWeapon())
 			end
 		end
 		
 		if TableSearcher(ply.ClassNumber,"FlakJacketMajor") == true then
 			if dmginfo:GetDamageType() == DMG_BLAST then
-				DamageScale = DamageScale*0.75
+				DamageScale = DamageScale*0.5
 				attacker:TakeDamage(dmginfo:GetBaseDamage()*0.1, ply, attacker:GetActiveWeapon())
 				ply:EmitSound("player/pl_scout_jump"..math.Rand(1,4)..".wav",50,100)
 			end
@@ -207,18 +207,18 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 			end
 		end
 		
-		if TableSearcher(attacker.ClassNumber,"Drain") == true and math.random(0,100) >= 60 then
+		if TableSearcher(attacker.ClassNumber,"Drain") == true then
 			if ply.Energy - dmginfo:GetBaseDamage()*DamageScale*0.1 > 0 then
 				ply.Energy = ply.Energy - dmginfo:GetBaseDamage()*DamageScale*0.1
 				--print(ply.Energy - dmginfo:GetBaseDamage()*DamageScale)
-				ply:EmitSound("player/spy_shield_break.wav",50,100)
+				--ply:EmitSound("player/spy_shield_break.wav",50,100)
 			else
 				ply.Energy = 0
 			end
 			DamageScale = DamageScale*1.1
 		end
 
-		if TableSearcher(ply.ClassNumber,"Reversal") == true and math.random(0,100) >= 93 then
+		if TableSearcher(ply.ClassNumber,"Reversal") == true and math.random(0,100) >= 90 then
 			ply:EmitSound("items/smallmedkit1.wav",100,100)
 			if (ply:Health() + DamageScale * dmginfo:GetBaseDamage()) >= ply:GetMaxHealth() then 
 				ply:SetHealth(ply:GetMaxHealth())
@@ -245,23 +245,27 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 					ply.HealthCoolDown = CurTime() + 1
 					DamageScale=0
 					ply:CreateRagdoll()
-					--attacker.OldFrags = attacker:Frags()
+
+					ply:SetArmor(100)
 					
-					--attacker:AddFrags(1)
-					
-					
-					--timer.Simple(5, function()
-					--	ply:ChatPrint("cocks")
-					--	attacker:SetFrags(attacker.OldFrags)
-					--end)
-					
-					
+					timer.Create("cloakrunout"..ply:EntIndex(),0.1, 0 function()
+						if ply:Armor() > 0 and ply:Alive() then
+							ply:SetArmor(ply:Armor()-1)
+							
+						else
+							ply.Cloaked = false
+							attacker:SetMaterial("")
+							attacker:GetActiveWeapon():SetMaterial("")
+							timer.Destroy("cloakrunout" .. ply:EntIndex())
+						end
+					end)
 					
 					net.Start( "PlayerKilledByPlayer" )
 						net.WriteEntity( ply )
 						net.WriteString( attacker:GetActiveWeapon():GetClass() )
 						net.WriteEntity( attacker )
 					net.Broadcast()
+					
 					timer.Simple(0.01,function()
 						ply:SetMaterial("models/effects/vol_light001")
 					end)
@@ -336,6 +340,15 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 			else
 				dmginfo:SubtractDamage(10)
 				DamageScale = DamageScale*2
+			end
+		end
+		
+		if TableSearcher(ply.ClassNumber,"ArmorDependant") == true then
+			if ply:Armor() - dmginfo:GetBaseDamage() > 0 then
+				DamageScale = 0
+				ply:SetArmor(ply:Armor() - dmginfo:GetBaseDamage())
+			else
+				DamageScale = 10
 			end
 		end
 		
