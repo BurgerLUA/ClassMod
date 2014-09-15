@@ -2,11 +2,6 @@
 
 
 function FirstClassSpawn( ply )
-	ply.NextSwapTime = 0
-	ply.FakeDeathCoolDown = 0
-	ply.Cloaked = false
-	ply.HealthCoolDown = 0
-	ply.NextTick = 0
 	ply.ClassNumber = 1
 	ply.ClassNumberTo = 1
 	ply:SetNWInt("classnum",ply.ClassNumber)
@@ -19,11 +14,8 @@ hook.Add( "PlayerInitialSpawn", "Initialize Class", FirstClassSpawn )
 
 function PlayerClassSpawn(ply)
 
-	ply.Cloaked = false
-
-	ply.NextTick = 0
-	ply.HealthCoolDown = 0
-
+	ply.HasChangedClass = true
+	
 	if ply.ClassNumber == nil then
 		ply.ClassNumber = 1
 	end
@@ -31,7 +23,6 @@ function PlayerClassSpawn(ply)
 	if ply.ClassNumberTo == nil then
 		ply.ClassNumberTo = 1
 	end
-
 
 	ply.ClassNumber = ply.ClassNumberTo
 	ply.Energy = Class[ply.ClassNumber]["stamina"]
@@ -58,7 +49,7 @@ function PlayerClassSpawn(ply)
 	
 
 	timer.Simple(0.01, function()
-		CheckPerks(ply)
+		--CheckPerks(ply)
 		ply:SetNWInt("classnum",ply.ClassNumber)
 		ply:SetHealth(Class[ply.ClassNumber]["health"])
 		ply:SetArmor(Class[ply.ClassNumber]["armor"])

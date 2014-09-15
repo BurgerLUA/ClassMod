@@ -13,7 +13,7 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
  
 	if attacker:IsPlayer() and attacker ~= ply then 
 
-		if TableSearcher(ply.ClassNumber,"Evasion") == true && math.random(0,100) >= 80 then
+		if TableSearcher(ply.ClassNumber,"Evasion") == true and math.random(0,100) >= 80 then
 			DamageScale = 0
 			ply:EmitSound("weapons/fx/nearmiss/bulletltor"..math.Rand(10,14)..".wav",100,math.Rand(90,110))
 			dmginfo:ScaleDamage(0)
@@ -58,9 +58,14 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 		end
 
 		if TableSearcher(ply.ClassNumber,"Swap") == true then
-			--print("Swap")
+
+			if not ply.NextSwapTime then
+				ply.NextSwapTime = 0 
+			end
+		
+		
 			if ply:Health() < 50 then 
-				--print("Swaping")
+
 				if ply:Alive() == false then return end
 				if ply.NextSwapTime <= CurTime() then
 					ply.NextSwapTime = CurTime() + 60
@@ -71,11 +76,9 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 						if rand+1<= table.Count(Players) then
 							toSwap = Players[rand+1]
 							debugnum = rand+1
-						elseif rand-1 >= 1 then 
+						else
 							debugnum = rand-1
 							toSwap = Players[rand-1]
-						else
-							print("weird")
 						end
 					end
 					local pos1 = ply:GetPos()
@@ -101,7 +104,7 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 		
 		
 		if TableSearcher(ply.ClassNumber,"Survivor") == true then
-			DamageScale = 1 - math.Clamp(attacker:GetMaxHealth()-attacker:Health(),0,75)/100
+			DamageScale = 1 - math.Clamp(attacker:GetMaxHealth()-attacker:Health(),0,50)/100
 		end	
 		
 		
@@ -235,6 +238,18 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 
 		if TableSearcher(ply.ClassNumber,"FakeDeath") == true then --MUST BE LAST
 		
+			if not ply.FakeDeathCoolDown then
+				ply.FakeDeathCoolDown = 0
+			end
+			
+			if not ply.Cloaked then
+				ply.Cloaked == false
+			end
+			
+			if not ply.HealthCoolDown then
+				ply.HealthCoolDown == false
+			end
+		
 			if CurTime() < ply.HealthCoolDown then
 				DamageScale = DamageScale*0
 			end
@@ -244,6 +259,7 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 			else
 				secretmul = 1
 			end
+			
 			if dmginfo:GetBaseDamage()*DamageScale*secretmul > ply:Health() - 10 then	
 				if ply.FakeDeathCoolDown < CurTime() then
 					ply.FakeDeathCoolDown = CurTime() + 10
@@ -283,6 +299,16 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 		end
 		
 		if TableSearcher(attacker.ClassNumber,"FakeDeath") == true then
+		
+			if not attacker.FakeDeathCoolDown then
+				attacker.FakeDeathCoolDown = 0
+			end
+			
+			if not attacker.Cloaked then
+				attacker.Cloaked == false
+			end
+		
+		
 			if attacker.Cloaked == true then 
 				attacker:SetMaterial("")
 				attacker:GetActiveWeapon():SetMaterial("")
@@ -349,9 +375,9 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 		end
 		
 		if TableSearcher(ply.ClassNumber,"ArmorDependant") == true then
-			if ply:Armor() - HiddenScale*dmginfo:GetBaseDamage()/2 > 0 then
+			if ply:Armor() - HiddenScale*dmginfo:GetBaseDamage() > 0 then
 				DamageScale = 0
-				ply:SetArmor(ply:Armor() - dmginfo:GetBaseDamage())
+				ply:SetArmor(ply:Armor() - dmginfo:GetBaseDamage()*2)
 			else
 				DamageScale = 10
 			end

@@ -5,6 +5,10 @@ function SVSprintThink()
 	for i=1, table.Count(player.GetAll()) do
 		local ply = PlayerTable[i]
 		
+		if not ply.NextTick then
+			ply.NextTick = 0
+		end
+		
 		--print(ply:GetVelocity():Length())
 		
 		ply.Stamina = Class[ply.ClassNumber]["stamina"]

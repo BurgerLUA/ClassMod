@@ -16,7 +16,7 @@ CreateConVar("bur_class_jumppower", "200", FCVAR_REPLICATED + FCVAR_NOTIFY + FCV
 
 
 function ChangeClass( ply, cmd, args )
-
+	
 	local num = tonumber(args[1])
 
 	if type(num) ~= "number" then return end
@@ -31,6 +31,7 @@ function ChangeClass( ply, cmd, args )
 		--ply:ChatPrint("Your class will change to "..Class[num]["name"]..".")
 		--ply.ClassChanged = true
 		ply:Spawn()
+	--	ply.HasChangedClass == true
 
 	else
 		ply:ChatPrint("INVALID CLASS")
@@ -68,6 +69,7 @@ function ForceClass(ply,cmd,args)
 			--Entity(victim):ChatPrint("Your class will change to "..Class[num]["name"]..".")
 			--Entity(victim).ClassChanged = true
 			Entity(victim):Spawn()
+			--Entity(victim).HasChangedClass == true
 			
 			print(Entity(victim):Nick() .. " is now a " .. Class[num]["name"])
 

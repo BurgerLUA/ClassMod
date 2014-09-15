@@ -257,10 +257,10 @@ Class[17]["icon"] = "models/stalker.mdl"
 
 Class[18] = {}
 Class[18]["name"] = "Survivor"
-Class[18]["description"] = "For every point of health lost you gain 1% bonus damage resistance up to 75%. Survivors also regain health slowly over time."
+Class[18]["description"] = "For every point of health lost you gain 1% bonus damage resistance up to 50%. Survivors also regain health slowly over time."
 Class[18]["health"] = 100
 Class[18]["armor"] = 0
-Class[18]["stamina"] = 25
+Class[18]["stamina"] = 15
 Class[18]["walkspeedmul"] = 0.8
 Class[18]["runspeedmul"] =0.8
 Class[18]["jumpmul"] = 1
