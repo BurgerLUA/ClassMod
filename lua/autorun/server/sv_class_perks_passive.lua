@@ -152,7 +152,7 @@ function CheckPerks()
 				end
 				
 				if ply.LifeStealTick <= CurTime() then
-					ply.LifeStealTick = CurTime()+0.25
+					ply.LifeStealTick = CurTime()+1
 					if ply:Health() > 1 then
 						ply:SetHealth(ply:Health() - 1)
 					else
@@ -373,7 +373,7 @@ function CheckPerks()
 				
 				
 				if ply.first == false then
-					local regensound = CreateSound(ply, "weapons/gauss/chargeloop.wav" )
+					regensound = CreateSound(ply, "weapons/gauss/chargeloop.wav" )
 					ply.ArmorRegenTime = 0
 					ply.BeepArmorTick = 0
 					ply.IsRegening = false
