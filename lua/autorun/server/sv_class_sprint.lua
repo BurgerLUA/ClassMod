@@ -19,7 +19,7 @@ function SVSprintThink()
 			if ply.Energy >= 0.2 then 
 				if ply.NextTick < CurTime() then 
 					ply.NextTick = CurTime() + 0.2
-					ply.Energy = ply.Energy - 0.2
+					ply.Energy = ply.Energy - 0.1
 					ply:SetRunSpeed(RunSpeed)
 				end
 			else
@@ -72,7 +72,9 @@ hook.Add("Think", "Serverside Sprint Think", SVSprintThink)
 	
 				if pl.Jumps == 0 then
 					if pl.Energy > 2 then
-						pl.Energy = pl.Energy - 2
+						if ply:IsOnGround() then
+							pl.Energy = pl.Energy - 2
+						end
 					end
 				end
 	

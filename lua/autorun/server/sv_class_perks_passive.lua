@@ -184,8 +184,10 @@ function CheckPerks()
 				end
 				
 				if ply:GetVelocity():Length() > 0 then
-					if ply:IsOnGround() then
-						ply:TakeDamage(ply:GetVelocity():Length()/1000,ply,ply)
+					if ply.HeathTick <= CurTime() then
+						if ply:IsOnGround() then
+							ply:TakeDamage(ply:GetVelocity():Length()/1000,ply,ply)
+						end
 					end
 				else
 					if ply.HealthTick <= CurTime() then
