@@ -72,7 +72,7 @@ hook.Add("Think", "Serverside Sprint Think", SVSprintThink)
 	
 				if pl.Jumps == 0 then
 					if pl.Energy > 2 then
-						if ply:IsOnGround() then
+						if pl:IsOnGround() then
 							pl.Energy = pl.Energy - 2
 						end
 					end
