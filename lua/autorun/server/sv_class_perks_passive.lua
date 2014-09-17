@@ -375,6 +375,7 @@ function CheckPerks()
 				if ply.first == false then
 					regensound = CreateSound(ply, "weapons/gauss/chargeloop.wav" )
 					ply.ArmorRegenTime = 0
+					ply.ArmorRegenTick = 0
 					ply.BeepArmorTick = 0
 					ply.IsRegening = false
 					ply.RegenSound = false
@@ -414,10 +415,19 @@ function CheckPerks()
 					if ply.ArmorRegenTime >= CurTime() then
 						ply.IsRegening = false
 					else
-						ply:SetArmor(ply:Armor() + 1)
+						if ply.ArmorRegenTick <= CurTime() then
+							ply:SetArmor(ply:Armor() + 1)
+							ply.ArmorRegenTick = CurTime() + 0.04
+						end
 						if ply.IsRegening == false then
 							ply.IsRegening = true
 						end
+					end
+				else
+					ply.IsRegening = false
+					if ply.RegenSound == true then
+						regensound:Stop()
+						ply.RegenSound = false
 					end
 				end	
 			end    

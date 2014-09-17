@@ -31,7 +31,7 @@ function ChangeClass( ply, cmd, args )
 		--ply:ChatPrint("Your class will change to "..Class[num]["name"]..".")
 		--ply.ClassChanged = true
 		ply:Spawn()
-	--	ply.HasChangedClass == true
+		ply.HasChangedClass = true
 
 	else
 		ply:ChatPrint("INVALID CLASS")
@@ -69,7 +69,7 @@ function ForceClass(ply,cmd,args)
 			--Entity(victim):ChatPrint("Your class will change to "..Class[num]["name"]..".")
 			--Entity(victim).ClassChanged = true
 			Entity(victim):Spawn()
-			--Entity(victim).HasChangedClass == true
+			Entity(victim).HasChangedClass = true
 			
 			print(Entity(victim):Nick() .. " is now a " .. Class[num]["name"])
 

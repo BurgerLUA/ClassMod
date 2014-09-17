@@ -243,11 +243,11 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 			end
 			
 			if not ply.Cloaked then
-				ply.Cloaked == false
+				ply.Cloaked = false
 			end
 			
 			if not ply.HealthCoolDown then
-				ply.HealthCoolDown == false
+				ply.HealthCoolDown = false
 			end
 		
 			if CurTime() < ply.HealthCoolDown then
@@ -305,7 +305,7 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 			end
 			
 			if not attacker.Cloaked then
-				attacker.Cloaked == false
+				attacker.Cloaked = false
 			end
 		
 		
@@ -375,7 +375,7 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 		end
 		
 		if TableSearcher(ply.ClassNumber,"ArmorDependant") == true then
-			if ply:Armor() - HiddenScale*dmginfo:GetBaseDamage() > 0 then
+			if ply:Armor() - HiddenScale*dmginfo:GetBaseDamage()*1 > 0 then
 				DamageScale = 0
 				ply:SetArmor(ply:Armor() - dmginfo:GetBaseDamage()*2)
 			else
