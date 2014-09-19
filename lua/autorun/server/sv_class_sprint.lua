@@ -18,8 +18,8 @@ function SVSprintThink()
 		if ply:KeyDown(IN_SPEED) and ply:GetVelocity():Length() > 0 then
 			if ply.Energy >= 0.2 then 
 				if ply.NextTick < CurTime() then 
-					ply.NextTick = CurTime() + 0.2
-					ply.Energy = ply.Energy - 0.1
+					ply.NextTick = CurTime() + 0.1
+					ply.Energy = ply.Energy - 0.025
 					ply:SetRunSpeed(RunSpeed)
 				end
 			else
