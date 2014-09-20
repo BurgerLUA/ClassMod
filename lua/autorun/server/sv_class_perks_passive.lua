@@ -37,6 +37,7 @@ function CheckPerks()
 					ply.first = true
 				end
 				
+				
 				if ply.DeadLifeTick <= CurTime() then
 					ply.DeadLifeTick = CurTime() + 3
 				
@@ -52,18 +53,14 @@ function CheckPerks()
 			end
 
 			if TableSearcher(ply.ClassNumber,"ArcLight") == true then
-			
 				
-				
-				if ply.first == false then
-					ply.ArcLightTick = 0
-				
+				if not ply.ArcLightTick then
+					ply.ArcLightTick = 1
 					ply.first = true
 				end
 				
 				if ply.ArcLightTick <= CurTime() then
 					ply.ArcLightTick = CurTime() + 1
-					
 					local result = ents.FindInSphere(ply:GetPos(),300)
 					local resultCount = table.Count(result)
 
@@ -152,7 +149,7 @@ function CheckPerks()
 				end
 				
 				if ply.LifeStealTick <= CurTime() then
-					ply.LifeStealTick = CurTime()+1
+					ply.LifeStealTick = CurTime()+1.5
 					if ply:Health() > 1 then
 						ply:SetHealth(ply:Health() - 1)
 					else
@@ -188,7 +185,7 @@ function CheckPerks()
 						if ply:IsOnGround() then
 							ply:TakeDamage(ply:GetVelocity():Length()/1000,ply,ply)
 						end
-						ply.HealthTick = CurTime() + 0.25
+						ply.HealthTick = CurTime() + 0.1
 					end
 				else
 					if ply.HealthTick <= CurTime() then
@@ -197,7 +194,7 @@ function CheckPerks()
 						else
 							ply:SetHealth(100)
 						end
-						ply.HealthTick = CurTime() + 1
+						ply.HealthTick = CurTime() + 0.75
 					end
 				end
 			end
@@ -303,7 +300,7 @@ function CheckPerks()
 						
 					if ply.ArmorDrainTick <= CurTime() then
 						ply:SetArmor(ply:Armor() - 1) 
-						ply.ArmorDrainTick = CurTime() + 1
+						ply.ArmorDrainTick = CurTime() + 6
 					end
 
 				else
@@ -322,21 +319,24 @@ function CheckPerks()
 			if TableSearcher(ply.ClassNumber,"Poop") then
 						
 				
-				local ent
+
 						
 				if ply.first == false then
-					ent = ents.Create("prop_physics")
-					ent:SetModel("models/Gibs/HGIBS_spine.mdl")
-					ent:SetMaterial("models/props_pipes/pipeset_metal.vmt")
-					ent:SetOwner(ply)
-					ent:SetCollisionGroup( COLLISION_GROUP_DEBRIS )
+
 						
 					ply.first = true
+					ply.PoopTick = 0
 				end
 
 							
 				if ply.PoopTick <= CurTime() then
 					ply.PoopTick = CurTime() + 5
+					
+					local ent = ents.Create("prop_physics")
+					ent:SetModel("models/Gibs/HGIBS_spine.mdl")
+					ent:SetMaterial("models/props_pipes/pipeset_metal.vmt")
+					ent:SetOwner(ply)
+					ent:SetCollisionGroup( COLLISION_GROUP_DEBRIS )
 					ent:SetPos(ply:GetPos() + Vector(0,0,30))	
 					ent:SetAngles(ply:GetAngles())
 					ent:Spawn()
