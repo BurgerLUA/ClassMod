@@ -34,7 +34,7 @@ function PlayerClassSpawn(ply)
 			ply.ClassNumber = 30
 		end
 		
-		ply.HasChangedClass == true
+		ply.HasChangedClass = true
 		
 		timer.Simple(1, function()
 			ply:Give("weapon_cs_botgun")
