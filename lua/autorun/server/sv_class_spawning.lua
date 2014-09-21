@@ -36,7 +36,8 @@ function PlayerClassSpawn(ply)
 		
 		ply.HasChangedClass = true
 		
-		timer.Simple(1, function()
+		timer.Simple(2.5, function()
+			ply:StripWeapons()
 			ply:Give("weapon_cs_botgun")
 			ply:SetModel("models/player/woody/woody.mdl")
 			
