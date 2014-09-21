@@ -247,10 +247,10 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 			end
 			
 			if not ply.HealthCoolDown then
-				ply.HealthCoolDown = false
+				ply.HealthCoolDown = 0
 			end
 		
-			if CurTime() < ply.HealthCoolDown then
+			if CurTime() <= ply.HealthCoolDown then
 				DamageScale = DamageScale*0
 			end
 		
