@@ -10,7 +10,11 @@ function CheckPerks()
 			--print("UPDATE")
 			if TableSearcher(ply.ClassNumber,"LifeRegen") == true then
 			
-				 
+				 if ply:IsBot() then
+					amount = 10
+				else 
+					amount = 1
+				end
 				
 				if ply.first == false then 
 					ply.LifeRegenTick = 0
@@ -20,11 +24,17 @@ function CheckPerks()
 				
 				if ply.LifeRegenTick <= CurTime() then
 					ply.LifeRegenTick = CurTime()+1
-					if ply:Health() < ply:GetMaxHealth() then
-						ply:SetHealth(ply:Health() + 1)
+					if ply:Health() + amount <= ply:GetMaxHealth() then
+						ply:SetHealth(ply:Health() + amount)
+					else
+						ply:SetHealth(ply:GetMaxHealth())
 					end
 				end
 			end
+			
+			
+			
+			
 			
 			if TableSearcher(ply.ClassNumber,"DeadLife") == true then
 				
@@ -373,20 +383,30 @@ function CheckPerks()
 
 			if TableSearcher(ply.ClassNumber,"ArmorRegen") == true then
 				
-				
-				
-				if ply.first == false then
+				if not regensound then
 					regensound = CreateSound(ply, "weapons/gauss/chargeloop.wav" )
-					ply.ArmorRegenTime = 0
-					ply.ArmorRegenTick = 0
-					ply.BeepArmorTick = 0
-					ply.IsRegening = false
-					ply.RegenSound = false
-					
-					ply.first = true
 				end
 				
+				if not ply.ArmorRegenTime then
+					ply.ArmorRegenTime = 0
+				end
+				
+				if not ply.ArmorRegenTick then
+					ply.ArmorRegenTick = 0
+				end
 
+				if not ply.IsRegening then
+					ply.IsRegening = false
+				end
+				
+				if not ply.RegenSound then
+					ply.RegenSound = false
+				end
+				
+				if not ply.BeepArmorTick then
+					ply.BeepArmorTick = 0
+				end
+					
 				
 				if ply.IsRegening == true then
 					regensound:ChangePitch(50+ply:Armor(),0)

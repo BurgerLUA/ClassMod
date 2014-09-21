@@ -153,7 +153,7 @@ Class[10]["icon"] = "models/player/corpse1.mdl"
 Class[11] = {}
 Class[11]["name"] = "Field Medic"
 Class[11]["description"] = "Field Medics slowly restore 1 health every second to nearby allies on his team. This bonus is tripled on the medic."
-Class[11]["health"] = 110
+Class[11]["health"] = 100
 Class[11]["armor"] = 0
 Class[11]["stamina"] = 20
 Class[11]["walkspeedmul"] = 0.90
@@ -437,7 +437,7 @@ Class[29]["icon"] = "models/Police.mdl"
 
 Class[30] = {}
 Class[30]["name"] = "Spartan"
-Class[30]["description"] = "Gain a full suit of armor that prevents damage to your health as long as your armor is above 0. Since power armor is for pussies, you take 10x more damage if you have no armor. You regenerate armor 5 seconds after you're shot. It takes 8 seconds to fully regen armor from 0 to 100. "
+Class[30]["description"] = "Gain a full suit of armor that prevents damage to your health as long as your armor is above 0. Since power armor is for pussies, you take 10x more damage if you have no armor. You regenerate armor 5 seconds after you're shot. It takes 8 seconds to fully regen armor from 0 to 100. You also regen life slowly."
 Class[30]["health"] = 100
 Class[30]["armor"] = 100
 Class[30]["stamina"] = 15
@@ -446,7 +446,7 @@ Class[30]["runspeedmul"] = .8
 Class[30]["jumpmul"] = 1.75
 Class[30]["crouchmul"] = 0.9
 Class[30]["fallmul"] = 0.75
-Class[30]["perks"] = {"ArmorRegen","ArmorDependant"}
+Class[30]["perks"] = {"ArmorRegen","ArmorDependant","LifeRegen"}
 Class[30]["color"] = Color(0, 155, 25,255)
 Class[30]["icon"] = "models/player/lordvipes/haloce/spartan_classic.mdl"
 

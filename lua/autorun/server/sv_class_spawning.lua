@@ -25,6 +25,42 @@ function PlayerClassSpawn(ply)
 	end
 
 	ply.ClassNumber = ply.ClassNumberTo
+	
+	if ply:IsBot() then
+		ply:StripWeapons()
+		ply:ConCommand("cl_playermodel","css_riot")
+		
+		if ply.ClassNumber ~= 30 then
+			ply.ClassNumber = 30
+		end
+		
+		ply.HasChangedClass == true
+		
+		timer.Simple(1, function()
+			ply:Give("weapon_cs_botgun")
+			ply:SetModel("models/player/woody/woody.mdl")
+			
+	
+			local ent = ply
+
+			local FlexNum = ent:GetFlexNum() - 1
+			if ( FlexNum <= 0 ) then return end
+			
+			
+			for i=0, FlexNum - 1 do
+	
+				local Name = ent:GetFlexName( i )
+	
+
+				
+				ent:SetFlexWeight( i, math.Rand(-1,1) )
+				ent:SetFlexScale( 5 )
+				
+			end
+		end)
+		
+	end
+	
 	ply.Energy = Class[ply.ClassNumber]["stamina"]
 	ply:SetNWInt("stamina",Class[ply.ClassNumber]["stamina"])
 	
@@ -36,6 +72,10 @@ function PlayerClassSpawn(ply)
 	
 	local Players = player.GetAll()
 	
+	
+
+	
+	--[[
 	print("-----------------------------------")
 	print("DAMAGE DEALT TO "..string.upper(ply:Nick()) .. ":")
 	for i=1, table.Count(Players) do
@@ -46,7 +86,7 @@ function PlayerClassSpawn(ply)
 		
 	end
 	print("-----------------------------------")
-	
+	--]]
 
 	timer.Simple(0.01, function()
 		--CheckPerks(ply)
