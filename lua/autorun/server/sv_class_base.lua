@@ -116,12 +116,12 @@ function CreateNextBot(ply, cmd, args)
 	local ID = NextBot:EntIndex()
 	
 	timer.Create("Nextbot",1,0, function()
-		if IsValid(ply) == false then
+		if IsValid(NextBot) == false then
 			timer.Destroy("Nextbot")
 		return end
 	
-		if ply:Alive() == false then
-			ply:Spawn()
+		if NextBot:Alive() == false then
+			NextBot:Spawn()
 		end
 		
 	
