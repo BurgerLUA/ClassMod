@@ -115,42 +115,16 @@ function CreateNextBot(ply, cmd, args)
 	local NextBot = player.CreateNextBot( args[1] )
 	local ID = NextBot:EntIndex()
 	
-	print(ID)
+	timer.Create("Nextbot",1,0, function()
+		if IsValid(ply) == false then
+			timer.Destroy("Nextbot")
+		return end
 	
-	if not SwitchTime then
-		SwitchTime = 0
-	end
-	
-	if not Switch then
-		Switch = 1
-	end
-	
-	timer.Create("Nextbot"..NextBot:Nick(),3,0, function()
-
-		if Switch < 3 then
-			Switch = Switch + 1
-		else
-			Switch = 1
+		if ply:Alive() == false then
+			ply:Spawn()
 		end
 		
-		if NextBot:Alive() == false then
-			NextBot:ConCommand("+attack")
-			NextBot:ConCommand("-attack")
-		end
-		
-		if Switch == 1 then
-			NextBot:ConCommand("-moveleft")
-			NextBot:ConCommand("+forward")
-			print("Forward")
-		elseif Switch == 2 then
-			NextBot:ConCommand("-forward")
-			NextBot:ConCommand("+back")
-			print("Back")
-		elseif Switch == 3 then
-			NextBot:ConCommand("-back")
-			NextBot:ConCommand("+moveleft")
-			print("Left")
-		end
+	
 	
 	end)
 	
