@@ -230,10 +230,8 @@ function CheckPerks()
 					end
 				elseif ply.FragTick <= CurTime() then
 					ply.FragTick = CurTime() + 0.5
-					if ply:Health() > 1 then
+					if ply:Health() > 75 then
 						ply:SetHealth(ply:Health()-1)
-					else
-						ply:Kill()
 					end
 				end
 		
