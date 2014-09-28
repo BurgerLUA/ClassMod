@@ -239,20 +239,16 @@ function CheckPerks()
 			
 			
 			if TableSearcher(ply.ClassNumber,"Snackbar") == true then	
-				
-				
-				local effectdata
-				
+				print("BOOM MOTHERFUCKER")
 				if ply.first == false then
 					ply.ExplodeMe = false
 
 					ply.first = true
 				end
-			
 				if ply:Alive() == false and ply.ExplodeMe == false then
 					ply.ExplodeMe = true
 
-					effectdata = EffectData()
+					local effectdata = EffectData()
 					effectdata:SetScale( 1 )
 					effectdata:SetStart( ply:GetPos() )
 					effectdata:SetOrigin( ply:GetPos() )
@@ -293,8 +289,8 @@ function CheckPerks()
 					ply.MoveSpeed = ply:GetVelocity():Length()
 			
 					if ply.MoveSpeed < 10 then
-						if ply:GetMaterial() ~= "models/shadertest/predator" then
-							ply:SetMaterial("models/shadertest/predator")
+						if ply:GetMaterial() ~= "Models/effects/vol_light001" then
+							ply:SetMaterial("Models/effects/vol_light001")
 						end
 					elseif ply.MoveSpeed < 70 then
 						if ply:GetMaterial() ~= "models/shadertest/predator" then
