@@ -26,8 +26,8 @@ hook.Add( "HUDShouldDraw", "HUDHide", HUDHide )
 print("Updated")
 
 if CLIENT then
-	squaremat = Material("vgui/writealphaonly")
-	circlemat = Material("vgui/backpack_rect_mouseover_color")
+	squaremat = Material("vgui/white_additive")
+	circlemat = Material("vgui/gfx/vgui/cartridge")
 end
 
 
@@ -132,7 +132,7 @@ local function BurgerBulletHUD()
 			surface.SetMaterial( circlemat )
 			surface.SetDrawColor(255,255,0,Basefade)
 			--surface.DrawCircle( RingX, RingY, BarWidth*math.Clamp(clipmod/2,1,10)/50, Color(255,255,0,255) ) 
-			surface.DrawTexturedRectRotated(RingX,RingY,BarWidth*math.Clamp(clipmod/2,1,10)/4,BarHeight*math.Clamp(clipmod/2,1,10)/4,0)
+			surface.DrawTexturedRectRotated(RingX,RingY,BarWidth*math.Clamp(clipmod/2,1,10)/4,BarHeight*math.Clamp(clipmod/2,1,10)/4,i*clipmod*ConVert)
 			--surface.DrawTexturedRectRotated(RingX,RingY,BarWidth,BarHeight,i*1.2)
 		end
 	end
