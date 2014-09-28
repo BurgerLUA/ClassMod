@@ -245,15 +245,15 @@ function CheckPerks()
 				
 				if ply.first == false then
 					ply.ExplodeMe = false
-					effectdata = EffectData()
-					effectdata:SetScale( 1 )
-					
+
 					ply.first = true
 				end
 			
 				if ply:Alive() == false and ply.ExplodeMe == false then
 					ply.ExplodeMe = true
 
+					effectdata = EffectData()
+					effectdata:SetScale( 1 )
 					effectdata:SetStart( ply:GetPos() )
 					effectdata:SetOrigin( ply:GetPos() )
 						
