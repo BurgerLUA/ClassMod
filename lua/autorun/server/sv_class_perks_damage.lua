@@ -19,8 +19,6 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 			dmginfo:ScaleDamage(0)
 		end
 		
-
-		
 		if TableSearcher(attacker.ClassNumber,"Splash") == true then
 			local result = ents.FindInSphere(ply:GetPos(),1000)
 			local resultCount = table.Count(result)
@@ -63,8 +61,8 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 				ply.NextSwapTime = 0 
 			end
 		
-		
 			if ply:Health() < 50 then 
+				DamageScale = 0
 
 				if ply:Alive() == false then return end
 				if ply.NextSwapTime <= CurTime() then
@@ -104,7 +102,7 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 		
 		
 		if TableSearcher(ply.ClassNumber,"Survivor") == true then
-			DamageScale = 1 - math.Clamp(attacker:GetMaxHealth()-attacker:Health(),0,50)/100
+			DamageScale = 1 - math.Clamp(attacker:GetMaxHealth()-attacker:Health(),0,25)/100
 		end	
 		
 		
@@ -133,7 +131,6 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 				DamageScale = DamageScale*1
 			 end
 		end
-		
 
 		if TableSearcher(ply.ClassNumber,"Kevlar") == true then
 			if hitgroup == HITGROUP_HEAD then
@@ -143,7 +140,6 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 				ply:EmitSound("player/kevlar"..math.random(1,5)".wav",100,100)
 			end
 		end
-		
 		
 		if TableSearcher(ply.ClassNumber,"Shield") == true and math.random(0,100) >= 40 then
 			--print("BLOCK")
@@ -216,10 +212,8 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 		end
 		
 		if TableSearcher(attacker.ClassNumber,"Drain") == true then
-			if ply.Energy - dmginfo:GetBaseDamage()*DamageScale*0.1 > 0 then
-				ply.Energy = ply.Energy - dmginfo:GetBaseDamage()*DamageScale*0.1
-				--print(ply.Energy - dmginfo:GetBaseDamage()*DamageScale)
-				--ply:EmitSound("player/spy_shield_break.wav",50,100)
+			if ply.Energy - dmginfo:GetBaseDamage()*DamageScale*0.5 > 0 then
+				ply.Energy = ply.Energy - dmginfo:GetBaseDamage()*DamageScale*0.5
 			else
 				ply.Energy = 0
 			end
@@ -384,11 +378,22 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 		end
 		
 		
-		if TableSearcher(ply.ClassNumber,"BackDoor") == true and math.random(1,100) > 40 then
+		if TableSearcher(ply.ClassNumber,"BackDoor") == true then
 			ang1 = ply:GetAngles().y
 			ang2 = attacker:GetAngles().y
 			damageblock = math.random(10,30)
 			if ang1 - ang2 < 45 and ang1 - ang2 > -45 then
+				ply:EmitSound("weapons/fx/rics/ric"..math.random(1,5)..".wav",50,100)
+				attacker:EmitSound("weapons/fx/rics/ric"..math.random(1,5)..".wav",50,100)
+				dmginfo:SubtractDamage(damageblock)	
+			end
+		end
+		
+		if TableSearcher(ply.ClassNumber,"FrontDoor") == true then
+			ang1 = ply:GetAngles().y
+			ang2 = attacker:GetAngles().y
+			damageblock = math.random(10,30)
+			if ang1 - ang2 > 45 and ang1 - ang2 < -45 then
 				ply:EmitSound("weapons/fx/rics/ric"..math.random(1,5)..".wav",50,100)
 				attacker:EmitSound("weapons/fx/rics/ric"..math.random(1,5)..".wav",50,100)
 				dmginfo:SubtractDamage(damageblock)	
