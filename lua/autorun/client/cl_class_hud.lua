@@ -1,3 +1,55 @@
+
+
+function HUDHide( myhud )
+	--[[if SERVER then return end
+		for k, v in pairs{"CHudHealth","CHudBattery","CHudAmmo","CHudSecondaryAmmo"} do
+			if myhud == v then return false end
+		end
+		--]]
+end
+hook.Add( "HUDShouldDraw", "HUDHide", HUDHide )
+
+local function BurgerBulletHUD()
+end
+hook.Add("HUDPaint", "BB_HUDPAINT", BurgerBulletHUD)
+
+--[[
+surface.CreateFont( "cstrike", {
+	font = "",
+	size = 75,
+	weight = 500,
+	blursize = 0,
+	scanlines = 0,
+	antialias = true,
+	underline = false,
+	italic = false,
+	strikeout = false,
+	symbol = false,
+	rotary = false,
+	shadow = false,
+	additive = false,
+	outline = false,
+} )
+
+
+local function BurgerBulletHUD()
+
+	x = ScrW()
+	y = ScrH()
+	
+	
+	surface.SetFont( "cstrike" )
+	surface.SetTextColor( 255 , 255 , 255 )
+	surface.SetTextPos(x/2,y/2)
+	surface.DrawText( "(100)" )
+	
+end
+
+hook.Add("HUDPaint", "BB_HUDPAINT", BurgerBulletHUD)
+--]]
+
+--[[
+
 surface.CreateFont( "BurgerFont", {
 	font = "Roboto-Black",
 	size = 50,
@@ -14,14 +66,6 @@ surface.CreateFont( "BurgerFont", {
 	additive = false,
 	outline = false,
 } )
-
-function HUDHide( myhud )
-	if SERVER then return end
-		for k, v in pairs{"CHudHealth","CHudBattery","CHudAmmo","CHudSecondaryAmmo"} do
-			if myhud == v then return false end
-		end
-end
-hook.Add( "HUDShouldDraw", "HUDHide", HUDHide )
 
 print("Updated")
 
@@ -189,3 +233,4 @@ local function BurgerBulletHUD()
 end
 hook.Add("HUDPaint", "BB_HUDPAINT", BurgerBulletHUD)
 
+--]]

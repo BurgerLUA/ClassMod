@@ -62,10 +62,9 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 			end
 		
 			if ply:Health() < 50 then 
-				DamageScale = 0
-
 				if ply:Alive() == false then return end
 				if ply.NextSwapTime <= CurTime() then
+					DamageScale = 0
 					ply.NextSwapTime = CurTime() + 60
 					local Players = player.GetAll()
 					local rand = math.random(1,table.Count(Players))
@@ -164,7 +163,7 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 
 		if TableSearcher(ply.ClassNumber,"BrainDamage") == true then
 			if hitgroup == HITGROUP_HEAD then
-				DamageScale = DamageScale*3
+				DamageScale = DamageScale*2
 				ply:EmitSound("player/headshot"..math.random(1,2)..".wav",50,100)
 			else
 				DamageScale = DamageScale*0.85
@@ -263,10 +262,9 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 
 					ply:SetArmor(100)
 					
-					timer.Create("cloakrunout"..ply:EntIndex(),0.1, 0, function()
+					timer.Create("cloakrunout"..ply:EntIndex(),0.05, 0, function()
 						if ply:Armor() > 0 and ply:Alive() then
 							ply:SetArmor(ply:Armor()-1)
-							
 						else
 							ply.Cloaked = false
 							attacker:SetMaterial("")

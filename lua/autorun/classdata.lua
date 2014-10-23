@@ -77,7 +77,7 @@ Class[5]["icon"] = "models/Combine_Soldier.mdl"
 
 Class[6] = {}
 Class[6]["name"] = "Zombie"
-Class[6]["description"] = "Zombies gain +1 health and armor every 3 seconds up to 75 and damage enemies based on distance in a 300 unit radius due to their toxic flesh. Zombies are also 200% weaker to headshots but 10% resistant to everywhere else. Zombies cannot heal."
+Class[6]["description"] = "Zombies gain +1 health and armor every 3 seconds up to 75 and damage enemies based on distance in a 300 unit radius due to their toxic flesh. Zombies are also 100% weaker to headshots but 10% resistant to everywhere else. Zombies cannot heal."
 Class[6]["health"] = 50
 Class[6]["armor"] = 50
 Class[6]["stamina"] = 15
@@ -332,8 +332,8 @@ Class[22]["icon"] = "models/vortigaunt.mdl"
 
 Class[23] = {}
 Class[23]["name"] = "Spy"
-Class[23]["description"] = "Spies can fake their death by creating a holographic corpse while turning invisible. The invisibility lasts until you damage someone. Spies grant a 100% critical strike chance while invisible."
-Class[23]["health"] = 50
+Class[23]["description"] = "Spies can fake their death by creating a holographic corpse while turning invisible. The invisibility lasts until you damage someone. Spies grant a 100% critical strike chance while invisible. Spies cannot heal."
+Class[23]["health"] = 25
 Class[23]["armor"] = 0
 Class[23]["stamina"] = 20
 Class[23]["walkspeedmul"] = 1
@@ -341,7 +341,7 @@ Class[23]["runspeedmul"] = 1
 Class[23]["jumpmul"] = 1
 Class[23]["crouchmul"] = 1
 Class[23]["fallmul"] = 1
-Class[23]["perks"] = {"FakeDeath"}
+Class[23]["perks"] = {"FakeDeath","Necro"}
 Class[23]["color"] = Color(200,100,100,255)
 Class[23]["icon"] = "models/player/spy.mdl"
 
