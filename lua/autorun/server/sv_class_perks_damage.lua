@@ -136,7 +136,7 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 				DamageScale = DamageScale*1
 			else
 				DamageScale = DamageScale*0.75
-				ply:EmitSound("player/kevlar"..math.random(1,5)".wav",100,100)
+				ply:EmitSound("player/kevlar"..math.Rand(1,5)..".wav",100,100)
 			end
 		end
 		
