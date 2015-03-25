@@ -12,6 +12,10 @@ function TableSearcher(num,tofind)
 		if table.HasValue(Class[num]["perks"],tofind) then
 			found = true
 		end
+		
+		if found == true then
+			--print ( tofind )
+		end
 	end
 	
 return found end

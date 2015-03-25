@@ -223,39 +223,6 @@ concommand.Add("selectclass", ClassSelectorDerma)
 
 function ClassChat( ply, strText, bTeamOnly, bPlayerIsDead )
 
-	local tab = {}
-	
-	local classnum = ply:GetNWInt("classnum")
- 
-	if ( bPlayerIsDead ) then
-		table.insert( tab, Color( 255, 30, 40 ) )
-		table.insert( tab, "*DEAD* " )
-	end
- 
-	if ( bTeamOnly ) then
-		table.insert( tab, Color( 30, 160, 40 ) )
-		table.insert( tab, "(TEAM) " )
-	end
-
-	table.insert( tab, Class[classnum]["color"] )
-	table.insert( tab, "["..Class[classnum]["name"].."]" )
-	
-	
-	if ( IsValid( ply ) ) then
-		table.insert( tab, team.GetColor(ply:Team()) )
-		table.insert( tab, ply:GetName() )
-	else
-		table.insert( tab, "Console" )
-	end
- 
-	table.insert( tab, Color( 255, 255, 255 ) )
-	table.insert( tab, ": "..strText )
- 
-	chat.AddText( unpack(tab) )
-	
-	
- 
-	return true
  
 end
 

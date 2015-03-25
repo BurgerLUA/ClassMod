@@ -119,14 +119,12 @@ function CheckPerks()
 			
 				
 				
-				if ply.first == false then
-					ply.LeechTick = 0
-						
-					ply.first = true
+				if not ply.LeechTick then 
+					ply.LeechTick = 1
 				end
 					
 				if ply.LeechTick <= CurTime() then
-					ply.LeechTick = CurTime() + 0.75
+					ply.LeechTick = CurTime() + 1
 					local result = ents.FindInSphere(ply:GetPos(),500)
 					local resultCount = table.Count(result)
 
@@ -134,12 +132,15 @@ function CheckPerks()
 						if result[i]:IsPlayer() == true then
 							if result[i] ~= ply then
 								if result[i]:Alive() == true then 
-									result[i]:TakeDamage(1,ply,ply)
+									if (result[i]:Team() == ply:Team() and ply:Team() == 1001) or (result[i]:Team() ~= ply:Team() and ply:Team() ~= 1001) then
+		
+										result[i]:TakeDamage(1,ply,ply)
 
-									if ply:Health() < 200 then
-										ply:SetHealth(ply:Health() + 1)
-									else
-										ply:SetHealth(200)
+										if ply:Health() < 200 then
+											ply:SetHealth(ply:Health() + 1)
+										else
+											ply:SetHealth(200)
+										end
 									end
 								end
 							end
@@ -148,7 +149,8 @@ function CheckPerks()
 				end
 			end
 			
-			if TableSearcher(ply.ClassNumber,"LifeSteal") == true then	
+			
+			if TableSearcher(ply.ClassNumber,"Annoying") == true then	
 			
 				
 				
@@ -238,41 +240,7 @@ function CheckPerks()
 			end
 			
 			
-			if TableSearcher(ply.ClassNumber,"Snackbar") == true then	
-				print("BOOM MOTHERFUCKER")
-				if ply.first == false then
-					ply.ExplodeMe = false
 
-					ply.first = true
-				end
-				if ply:Alive() == false and ply.ExplodeMe == false then
-					ply.ExplodeMe = true
-
-					local effectdata = EffectData()
-					effectdata:SetScale( 1 )
-					effectdata:SetStart( ply:GetPos() )
-					effectdata:SetOrigin( ply:GetPos() )
-						
-					util.Effect( "Explosion", effectdata )	
-					util.BlastDamage(ply, ply, ply:GetPos(), 250, 100)
-					util.Decal("Scorch", ply:GetPos(), ply:GetPos())
-
-					if table.Count(ents.FindInSphere(ply:GetPos(),250)) > 0 then
-						for k,v in pairs(ents.FindInSphere(ply:GetPos(),250)) do
-							if v:GetClass() == "prop_physics" then
-								if math.Rand(0,100) >= 70 then
-									v:Ignite(250/20 - v:GetPos():Distance( ply:GetPos() )/20,0)
-								end
-								if v:IsValid() then
-									constraint.RemoveAll(v)
-									v:GetPhysicsObject():EnableMotion(true)
-									v:GetPhysicsObject():Wake()
-								end
-							end
-						end
-					end
-				end
-			end
 			
 			
 			if TableSearcher(ply.ClassNumber,"Cloak") == true then	
@@ -313,6 +281,7 @@ function CheckPerks()
 					end
 				end
 			end
+			
 			
 			if TableSearcher(ply.ClassNumber,"Necro") then
 				if ply:GetMaxHealth() ~= 1 then 
@@ -520,3 +489,63 @@ end
 hook.Add("Think", "Check Perks Think", CheckPerks)
 
 print("sv_class_perks_passive loaded")
+
+
+
+
+function SnackBarDeath(victim,inflictor,attacker)
+	
+	
+	
+	if TableSearcher(victim.ClassNumber,"Snackbar") == true then	
+		
+		if not victim.Armed then 
+			victim.Armed = false
+		end
+		
+		
+		if victim.Armed == true then
+			local effectdata = EffectData()
+			effectdata:SetScale( 1 )
+			effectdata:SetStart( victim:GetPos() )
+			effectdata:SetOrigin( victim:GetPos() )
+				
+			local Sphere = ents.FindInSphere(victim:GetPos(),200)
+			
+			local dmginfo = DamageInfo()
+			dmginfo:SetDamage(100)
+			dmginfo:SetDamageType(DMG_BLAST)
+			dmginfo:SetAttacker(victim)
+			dmginfo:SetInflictor(victim)
+			
+			
+				
+			for k,v in pairs(Sphere) do
+				if v ~= victim then
+					if v:Health() > 0 then
+						v:TakeDamageInfo(dmginfo)
+					end
+				end
+			end
+				
+				
+				
+				
+			util.Effect( "Explosion", effectdata )	
+			util.Decal("Scorch", victim:GetPos(), victim:GetPos())
+			victim.Armed = false
+		end
+		
+	end
+	
+	victim:SetMaterial("")
+	
+	
+	
+	
+
+end
+
+hook.Add("PlayerDeath","ClassMod: On Player Death",SnackBarDeath)
+
+

@@ -1,413 +1,761 @@
 function ScaleClassDamage( ply, hitgroup, dmginfo )
 
-	local attacker = dmginfo:GetAttacker()
-
-	local DamageScale = 1
- 
-	if hitgroup == HITGROUP_HEAD then
-		HiddenScale = 2
-	else
-		HiddenScale = 1
-	end
+	if dmginfo:GetAttacker():IsPlayer() and dmginfo:GetAttacker() ~= ply then 
 	
- 
-	if attacker:IsPlayer() and attacker ~= ply then 
+		local DamageData = {}
+		DamageData.Victim = ply
+		DamageData.Attacker = dmginfo:GetAttacker()
+		DamageData.Damage = dmginfo:GetDamage()
+		DamageData.HitGroup = hitgroup
+		DamageData.DamageType = dmginfo:GetDamageType()
+		
+		local OldDamage = dmginfo:GetDamage()
 
-		if TableSearcher(ply.ClassNumber,"Evasion") == true and math.random(0,100) >= 80 then
-			DamageScale = 0
-			ply:EmitSound("weapons/fx/nearmiss/bulletltor"..math.Rand(10,14)..".wav",100,math.Rand(90,110))
-			dmginfo:ScaleDamage(0)
+		DamageData = PERK_Forced(DamageData)
+		DamageData = PERK_Evasion(DamageData)
+		DamageData = PERK_Splash(DamageData)
+		DamageData = PERK_Stunner(DamageData)
+		DamageData = PERK_DamageTrade1(DamageData)
+		DamageData = PERK_DamageTrade2(DamageData)
+		DamageData = PERK_Swap(DamageData)
+		DamageData = PERK_Survivor(DamageData)
+		DamageData = PERK_SoulAbsorb(DamageData)
+		DamageData = PERK_Helmet(DamageData)
+		DamageData = PERK_Kevlar(DamageData)
+		DamageData = PERK_Shield(DamageData)
+		DamageData = PERK_AP(DamageData)
+		DamageData = PERK_BrainDamage(DamageData)
+		DamageData = PERK_HeadshotHunter(DamageData)
+		DamageData = PERK_ReflectDamage1(DamageData)
+		DamageData = PERK_ReflectDamage2(DamageData)
+		DamageData = PERK_FlakJacketMajor(DamageData)
+		DamageData = PERK_FlakJacketMinor(DamageData)
+		DamageData = PERK_Explosive(DamageData)
+		DamageData = PERK_Drain(DamageData)
+		DamageData = PERK_Reversal(DamageData)
+		DamageData = PERK_Trap(DamageData)
+		DamageData = PERK_ArmorRegen(DamageData)
+		DamageData = PERK_Shatter(DamageData)
+		DamageData = PERK_Bargain(DamageData)
+		DamageData = PERK_ArmorDependant(DamageData)
+		DamageData = PERK_FrontDoor(DamageData)
+		DamageData = PERK_BackDoor(DamageData)
+		DamageData = PERK_FakeDeath1(DamageData)
+		DamageData = PERK_FakeDeath2(DamageData)
+		
+		--ply:SetNWInt(attacker:EntIndex(), ply:GetNWInt(attacker:EntIndex()) + (HiddenScale * DamageScale * dmginfo:GetBaseDamage()))
+		
+		if OldDamage ~= DamageData.Damage then
+			print(OldDamage .. "=>" .. DamageData.Damage)
 		end
 		
-		if TableSearcher(attacker.ClassNumber,"Splash") == true then
-			local result = ents.FindInSphere(ply:GetPos(),1000)
-			local resultCount = table.Count(result)
-			--print(result)
-			DamageScale = 1
-			for i=1, resultCount do
-				if result[i]:IsPlayer() == true then
-					--print(result[i]:Nick())
-					if result[i] ~= ply and result[i] ~= attacker then		
-						if result[i]:Team() == attacker:Team() and ply:Team() == 1001 then
-							damage = dmginfo:GetBaseDamage()*0.25
-							result[i]:TakeDamage(damage,  attacker, attacker:GetActiveWeapon())
-						elseif result[i]:Team() ~= attacker:Team() and ply:Team() ~= 1001 then
-							damage = dmginfo:GetBaseDamage()*0.25
-							result[i]:TakeDamage(damage,  attacker, attacker:GetActiveWeapon())
-						end
-					end
-				end
-			end
+		if DamageData.Damage then
+			dmginfo:SetDamage(DamageData.Damage)
 		end
-
-		if TableSearcher(attacker.ClassNumber,"Stunner") == true && math.Rand(0,100) >= 100 - (dmginfo:GetBaseDamage()/2) then
-			DamageScale = 2
-			ply:EmitSound("player/crit_received1.wav",100,100)
-			attacker:EmitSound("player/crit_hit.wav",100,100)
-			ply.Stun = 0.25
-		end
-		
-		if TableSearcher(ply.ClassNumber,"DamageTrade") == true then
-			DamageScale = DamageScale*1.3
-		end
-		
-		if TableSearcher(attacker.ClassNumber,"DamageTrade") == true then
-			DamageScale = DamageScale*1.1
-		end
-
-		if TableSearcher(ply.ClassNumber,"Swap") == true then
-
-			if not ply.NextSwapTime then
-				ply.NextSwapTime = 0 
-			end
-		
-			if ply:Health() < 50 then 
-				if ply:Alive() == false then return end
-				if ply.NextSwapTime <= CurTime() then
-					DamageScale = 0
-					ply.NextSwapTime = CurTime() + 60
-					local Players = player.GetAll()
-					local rand = math.random(1,table.Count(Players))
-					local toSwap = Players[rand]
-					if toSwap == ply then
-						if rand+1<= table.Count(Players) then
-							toSwap = Players[rand+1]
-							debugnum = rand+1
-						else
-							debugnum = rand-1
-							toSwap = Players[rand-1]
-						end
-					end
-					local pos1 = ply:GetPos()
-					local pos2 = toSwap:GetPos()
-					ply:SetPos(pos2)
-					toSwap:SetPos(pos1)
-					ply.Stun = 0.5
-					toSwap.Stun = 0.5
-					ply:EmitSound("ambient/machines/teleport4.wav",100,100)
-					toSwap:EmitSound("ambient/machines/teleport4.wav",100,100)
-				end
-			end
-		end
-
-		
-		if TableSearcher(attacker.ClassNumber,"LifeSteal") == true then
-			if attacker:Health() + math.max(0,dmginfo:GetDamage()*0.2) >= 200 then
-				attacker:SetHealth(200)
-			else
-				attacker:SetHealth(attacker:Health() + math.max(0,dmginfo:GetDamage()*0.2) )
-			end
-		end	
-		
-		
-		if TableSearcher(ply.ClassNumber,"Survivor") == true then
-			DamageScale = 1 - math.Clamp(attacker:GetMaxHealth()-attacker:Health(),0,25)/100
-		end	
-		
-		
-		if TableSearcher(attacker.ClassNumber,"ArmorSteal") == true then
-			if dmginfo:GetDamage()*0.15 < ply:Armor() then 
-				if attacker:Armor() + dmginfo:GetDamage()*0.30 >= 200 then
-					attacker:SetArmor(200)
-				else
-					attacker:SetArmor(attacker:Armor() + dmginfo:GetDamage()*0.15 )
-				end
-			end
-		end	
-
-		
-		if TableSearcher(attacker.ClassNumber,"SoulAbsorb") == true then
-			attacker.SoulCount = attacker.SoulCount + math.floor(dmginfo:GetDamage())
-			attacker.SoulsDelivered = attacker.SoulCount + math.floor(dmginfo:GetDamage())
-		end
-		
-		
-		if TableSearcher(ply.ClassNumber,"Helmet") == true then
-			if hitgroup == HITGROUP_HEAD then
-				ply:EmitSound("player/kevlar"..math.random(1,5)".wav",100,100)
-				DamageScale = DamageScale*0.8
-			else
-				DamageScale = DamageScale*1
-			 end
-		end
-
-		if TableSearcher(ply.ClassNumber,"Kevlar") == true then
-			if hitgroup == HITGROUP_HEAD then
-				DamageScale = DamageScale*1
-			else
-				DamageScale = DamageScale*0.75
-				ply:EmitSound("player/kevlar"..math.Rand(1,5)..".wav",100,100)
-			end
-		end
-		
-		if TableSearcher(ply.ClassNumber,"Shield") == true and math.random(0,100) >= 40 then
-			--print("BLOCK")
-			DamageBlock = math.Rand(1,10)	
-			if dmginfo:GetBaseDamage() - DamageBlock <= 0 then
-				ply:EmitSound("weapons/fx/rics/ric"..math.Rand(1,5)..".wav",50,100)
-			else
-				ply:EmitSound("weapons/spy_assassin_knife_impact_02.wav",50,math.Rand(90,110))
-			end
-			dmginfo:SubtractDamage(DamageBlock)
-		end
-		
-		if TableSearcher(attacker.ClassNumber,"AP") == true then
-			DamageScale = DamageScale + (ply:Armor()*0.01) - 0.25
-			--print(DamageScale)
-			if DamageScale > 1 then
-				ply:EmitSound("mvm/melee_impacts/arrow_impact_robo0"..math.random(1,3)..".wav",100,100)
-			else
-				ply:EmitSound("mvm/melee_impacts/blade_hit_robo0"..math.random(1,3)..".wav",100,100)
-			end
-		end
-
-		if TableSearcher(ply.ClassNumber,"BrainDamage") == true then
-			if hitgroup == HITGROUP_HEAD then
-				DamageScale = DamageScale*2
-				ply:EmitSound("player/headshot"..math.random(1,2)..".wav",50,100)
-			else
-				DamageScale = DamageScale*0.85
-			end
-		end
-		
-		if TableSearcher(attacker.ClassNumber,"HeadshotHunter") == true then
-			if hitgroup == HITGROUP_HEAD then
-				DamageScale = DamageScale*2
-				ply:EmitSound("player/headshot"..math.random(1,2)..".wav",50,100)
-			else
-				DamageScale = DamageScale*0.5
-			end
-		end
-		
-		if TableSearcher(attacker.ClassNumber,"ReflectDamage") == true then
-			DamageScale = DamageScale*0.75
-		end
-	
-		if TableSearcher(ply.ClassNumber,"ReflectDamage") == true then
-			DamageScale = DamageScale*1
-			if TableSearcher(attacker.ClassNumber,"ReflectDamage") == false then
-				attacker:TakeDamage(dmginfo:GetBaseDamage()*DamageScale*0.25, ply, attacker:GetActiveWeapon())
-			end
-		end
-		
-		if TableSearcher(ply.ClassNumber,"FlakJacketMajor") == true then
-			if dmginfo:GetDamageType() == DMG_BLAST then
-				DamageScale = DamageScale*0.5
-				attacker:TakeDamage(dmginfo:GetBaseDamage()*0.1, ply, attacker:GetActiveWeapon())
-				ply:EmitSound("player/pl_scout_jump"..math.Rand(1,4)..".wav",50,100)
-			end
-		end
-		
-		if TableSearcher(ply.ClassNumber,"FlakJacketMinor") == true then
-			if dmginfo:GetDamageType() == DMG_BLAST then
-				DamageScale = DamageScale*0.85
-			end
-		end
-		
-		if TableSearcher(attacker.ClassNumber,"Explosive") == true then
-			if dmginfo:GetDamageType() == DMG_BLAST then
-				DamageScale = DamageScale*1.1
-			end
-		end
-		
-		if TableSearcher(attacker.ClassNumber,"Drain") == true then
-			if ply.Energy - dmginfo:GetBaseDamage()*DamageScale*0.5 > 0 then
-				ply.Energy = ply.Energy - dmginfo:GetBaseDamage()*DamageScale*0.5
-			else
-				ply.Energy = 0
-			end
-			DamageScale = DamageScale*1.1
-		end
-
-		if TableSearcher(ply.ClassNumber,"Reversal") == true and math.random(0,100) >= 90 then
-			ply:EmitSound("items/smallmedkit1.wav",100,100)
-			if (ply:Health() + DamageScale * dmginfo:GetBaseDamage()) >= ply:GetMaxHealth() then 
-				ply:SetHealth(ply:GetMaxHealth())
-			else
-				ply:SetHealth(ply:Health() + DamageScale * dmginfo:GetBaseDamage() )
-			end
-			DamageScale = DamageScale*0
-		end
-
-		if TableSearcher(ply.ClassNumber,"FakeDeath") == true then --MUST BE LAST
-		
-			if not ply.FakeDeathCoolDown then
-				ply.FakeDeathCoolDown = 0
-			end
-			
-			if not ply.Cloaked then
-				ply.Cloaked = false
-			end
-			
-			if not ply.HealthCoolDown then
-				ply.HealthCoolDown = 0
-			end
-		
-			if CurTime() <= ply.HealthCoolDown then
-				DamageScale = DamageScale*0
-			end
-		
-			if hitgroup == HITGROUP_HEAD then
-				secretmul = 0 --basically headshots don't trigger it
-			else
-				secretmul = 1
-			end
-			
-			if dmginfo:GetBaseDamage()*DamageScale*secretmul > ply:Health() - 10 then	
-				if ply.FakeDeathCoolDown < CurTime() then
-					ply.FakeDeathCoolDown = CurTime() + 10
-					ply.HealthCoolDown = CurTime() + 1
-					DamageScale=0
-					ply:CreateRagdoll()
-
-					ply:SetArmor(100)
-					
-					timer.Create("cloakrunout"..ply:EntIndex(),0.05, 0, function()
-						if ply:Armor() > 0 and ply:Alive() then
-							ply:SetArmor(ply:Armor()-1)
-						else
-							ply.Cloaked = false
-							attacker:SetMaterial("")
-							attacker:GetActiveWeapon():SetMaterial("")
-							timer.Destroy("cloakrunout" .. ply:EntIndex())
-						end
-					end)
-					
-					net.Start( "PlayerKilledByPlayer" )
-						net.WriteEntity( ply )
-						net.WriteString( attacker:GetActiveWeapon():GetClass() )
-						net.WriteEntity( attacker )
-					net.Broadcast()
-					
-					timer.Simple(0.01,function()
-						ply:SetMaterial("models/effects/vol_light001")
-					end)
-
-					
-					ply:GetActiveWeapon():SetMaterial("models/effects/vol_light001")
-					ply.Cloaked = true
-				end
-			end
-		end
-		
-		if TableSearcher(attacker.ClassNumber,"FakeDeath") == true then
-		
-			if not attacker.FakeDeathCoolDown then
-				attacker.FakeDeathCoolDown = 0
-			end
-			
-			if not attacker.Cloaked then
-				attacker.Cloaked = false
-			end
-		
-		
-			if attacker.Cloaked == true then 
-				attacker:SetMaterial("")
-				attacker:GetActiveWeapon():SetMaterial("")
-				DamageScale = DamageScale*2
-				ply:EmitSound("player/crit_received1.wav",50,100)
-				attacker:EmitSound("player/crit_hit.wav",50,100)
-				attacker.Cloaked = false
-			end
-		end
-		
-		if TableSearcher(attacker.ClassNumber,"Trap") == true then
-			if dmginfo:GetDamageType() == DMG_BLAST then
-				ply.Stun = dmginfo:GetBaseDamage()*0.01
-				DamageScale = 0
-			end
-		end
-		
-		if TableSearcher(ply.ClassNumber,"ArmorRegen") == true then
-			ply.ArmorRegenTime = CurTime() + 5
-        end	
-		
-		
-		if TableSearcher(ply.ClassNumber,"Shatter") == true then
-
-			if not ply.Immunity then 
-				ply.Immunity = 0
-			end
-
-			if ply:Armor() > 0 then
-				if ply.Immunity == 0 then
-					ply.Immunity = 1
-					
-					local actualdamage = DamageInfo()
-					actualdamage:SetDamage(dmginfo:GetBaseDamage()*1.5)
-					actualdamage:SetAttacker(attacker)
-					actualdamage:SetInflictor(attacker:GetActiveWeapon())
-					actualdamage:SetDamageType(DMG_BULLET)
-					
-					ply:TakeDamageInfo( actualdamage )
-					ply.Stun = 1
-					ply:SetMaterial("brick/brick_model.vmf")
-					ply:EmitSound("weapons/demo_charge_hit_world"..math.random(1,3)..".wav")
-					timer.Simple(1,function() 
-						ply.Immunity = 0
-						ply:SetMaterial("")
-					end)
-				end
-			end
-			
-			if ply.Immunity == 1 then
-				DamageScale = DamageScale*0
-			end
-
-        end	
-		
-		
-		if TableSearcher(attacker.ClassNumber,"Bargain") == true then
-			if dmginfo:GetBaseDamage() - 10 <= 0 then
-				dmginfo:SetDamage(1)
-			else
-				dmginfo:SubtractDamage(10)
-				DamageScale = DamageScale*2
-			end
-		end
-		
-		if TableSearcher(ply.ClassNumber,"ArmorDependant") == true then
-			if ply:Armor() - HiddenScale*dmginfo:GetBaseDamage()*1 > 0 then
-				DamageScale = 0
-				ply:SetArmor(ply:Armor() - dmginfo:GetBaseDamage()*2)
-			else
-				DamageScale = 10
-			end
-		end
-		
-		
-		if TableSearcher(ply.ClassNumber,"BackDoor") == true then
-			ang1 = ply:GetAngles().y
-			ang2 = attacker:GetAngles().y
-			damageblock = math.random(10,30)
-			if ang1 - ang2 < 45 and ang1 - ang2 > -45 then
-				ply:EmitSound("weapons/fx/rics/ric"..math.random(1,5)..".wav",50,100)
-				attacker:EmitSound("weapons/fx/rics/ric"..math.random(1,5)..".wav",50,100)
-				dmginfo:SubtractDamage(damageblock)	
-			end
-		end
-		
-		if TableSearcher(ply.ClassNumber,"FrontDoor") == true then
-			ang1 = ply:GetAngles().y
-			ang2 = attacker:GetAngles().y
-			damageblock = math.random(10,30)
-			if ang1 - ang2 > 45 and ang1 - ang2 < -45 then
-				ply:EmitSound("weapons/fx/rics/ric"..math.random(1,5)..".wav",50,100)
-				attacker:EmitSound("weapons/fx/rics/ric"..math.random(1,5)..".wav",50,100)
-				dmginfo:SubtractDamage(damageblock)	
-			end
-		end
-		
-		dmginfo:ScaleDamage(DamageScale)
-
-		ply:SetNWInt(attacker:EntIndex(), ply:GetNWInt(attacker:EntIndex()) + (HiddenScale * DamageScale * dmginfo:GetBaseDamage()))
 		
 	end	
 	
+
+	
 end
---hook.Remove("ScalePlayerDamage","Scale Class Damage")
---hook.Remove("ScalePlayerDamage","Scale The Class Damage")
+
 hook.Add("ScalePlayerDamage","Scale Class Damage",ScaleClassDamage)
 
-print("sv_class_perks_damage loaded")
+function PERK_AP(DamageData)
 
+	if DamageChecker(DamageData) == false then return DamageData end
+	
+	if TableSearcher(DamageData.Attacker.ClassNumber,"AP") == true then
+		DamageScale = math.Clamp( (DamageData.Victim:Armor()*0.01) - 0.25, 0.25, 1 )
+		if DamageScale > 1 then
+			DamageData.Victim:EmitSound("mvm/melee_impacts/arrow_impact_robo0"..math.random(1,3)..".wav",100,100)
+		else
+			DamageData.Victim:EmitSound("mvm/melee_impacts/blade_hit_robo0"..math.random(1,3)..".wav",100,100)
+		end
+		
+		DamageData.Damage = DamageData.Damage * DamageScale
+
+	end
+	
+	return DamageData
+	
+end
+
+function PERK_ArmorDependant(DamageData)
+
+	if DamageChecker(DamageData) == false then return DamageData end
+	
+	if TableSearcher(DamageData.Victim.ClassNumber,"ArmorDependant") == true then
+	
+		local DamageScale = 10
+	
+		if DamageData.Victim:Armor() - DamageData.Damage > 0 then
+			DamageScale = 0
+			DamageData.Victim:SetArmor(DamageData.Victim:Armor() - DamageData.Damage*2)
+		end
+		
+		DamageData.Damage = DamageData.Damage * DamageScale
+		
+	end
+	
+	return DamageData
+	
+end
+
+function PERK_ArmorRegen(DamageData)
+
+	if DamageChecker(DamageData) == false then return DamageData end
+	
+	if TableSearcher(DamageData.Victim.ClassNumber,"ArmorRegen") == true then
+		DamageData.Victim.ArmorRegenTime = CurTime() + 5
+    end	
+	
+	return DamageData
+	
+end
+
+function PERK_ArmorSteal(DamageData)
+
+	if DamageChecker(DamageData) == false then return DamageData end
+	
+	if TableSearcher(DamageData.Attacker.ClassNumber,"ArmorSteal") == true then
+		if DamageData.Damage*0.15 < DamageData.Victim:Armor() then 
+		
+			DamageData.Attacker:SetArmor(math.Clamp(DamageData.Attacker:Armor() + DamageData.Damage*0.30,0,200))
+		
+		end
+	end	
+	
+	return DamageData
+	
+end
+
+function PERK_BackDoor(DamageData)
+
+	if DamageChecker(DamageData) == false then return DamageData end
+	
+	if TableSearcher(DamageData.Victim.ClassNumber,"BackDoor") == true then
+		ang1 = DamageData.Victim:GetAngles().y
+		ang2 = DamageData.Attacker:GetAngles().y
+		
+		if ang1 - ang2 < 45 and ang1 - ang2 > -45 then
+			local DamageBlock = math.random(10,30)
+			DamageData.Victim:EmitSound("weapons/fx/rics/ric"..math.random(1,5)..".wav",50,100)
+			DamageData.Attacker:EmitSound("weapons/fx/rics/ric"..math.random(1,5)..".wav",50,100)
+			
+			DamageData.Damage = math.max(0,DamageData.Damage - DamageBlock)
+		end
+		
+	end
+	
+	return DamageData
+	
+end
+
+function PERK_Bargain(DamageData)
+
+	if DamageChecker(DamageData) == false then return DamageData end
+	
+	if TableSearcher(DamageData.Attacker.ClassNumber,"Bargain") == true then
+
+		DamageData.Damage = math.max(1,(DamageData.Damage - 10) * 2)
+		
+		if DamageData.Damage == 1 then
+			DamageData.Victim:EmitSound("weapons/fx/rics/ric"..math.random(1,5)..".wav",50,100)
+			DamageData.Attacker:EmitSound("weapons/fx/rics/ric"..math.random(1,5)..".wav",50,100)
+		end
+		
+	end
+	
+	return DamageData
+	
+end
+
+function PERK_BrainDamage(DamageData)
+
+	if DamageChecker(DamageData) == false then return DamageData end
+	
+	if TableSearcher(DamageData.Victim.ClassNumber,"BrainDamage") == true then
+	
+		local DamageScale = 0.85
+	
+		if DamageData.HitGroup == HITGROUP_HEAD then
+			DamageScale = DamageScale*2
+			DamageData.Victim:EmitSound("player/headshot"..math.random(1,2)..".wav",50,100)
+		end
+		
+		DamageData.Damage = DamageData.Damage * DamageScale
+		
+	end
+	
+	return DamageData
+	
+end
+
+function PERK_DamageTrade1(DamageData)
+
+	if DamageChecker(DamageData) == false then return DamageData end
+	
+	if TableSearcher(DamageData.Victim.ClassNumber,"DamageTrade") == true then
+		DamageData.Damage = DamageData.Damage * 1.3
+	end
+	
+	return DamageData
+	
+end
+	
+function PERK_DamageTrade2(DamageData)
+
+	if DamageChecker(DamageData) == false then return DamageData end
+
+	if TableSearcher(DamageData.Attacker.ClassNumber,"DamageTrade") == true then
+		DamageData.Damage = DamageData.Damage * 1.3
+	end
+	
+	return DamageData
+	
+end
+
+
+function PERK_Drain(DamageData) --Useless 
+
+	if DamageChecker(DamageData) == false then return DamageData end
+	
+	if TableSearcher(DamageData.Attacker.ClassNumber,"Drain") == true then
+	
+		if DamageData.Victim.Energy - DamageData.Damage*0.5 > 0 then
+			DamageData.Victim.Energy = DamageData.Victim.Energy - DamageData.Damage*0.5
+		else
+			DamageData.Victim.Energy = 0
+		end
+		
+		
+		
+		DamageScale = DamageScale*1.1
+		
+		DamageData.Damage = DamageData.Damage * DamageScale
+		
+	end
+	
+	return DamageData
+	
+end
+
+function PERK_Evasion(DamageData)
+
+	if DamageChecker(DamageData) == false then return DamageData end
+
+	if TableSearcher(DamageData.Victim.ClassNumber,"Evasion") == true and math.random(0,100) >= 80 then
+	
+		DamageData.Damage = 0
+		DamageData.Victim:EmitSound("weapons/fx/nearmiss/bulletltor"..math.random(10,14)..".wav",100,math.random(90,110))
+		
+	end
+	
+	return DamageData
+	
+end
+
+function PERK_Explosive(DamageData)
+
+	if DamageChecker(DamageData) == false then return DamageData end
+
+	if TableSearcher(DamageData.Attacker.ClassNumber,"Explosive") == true then
+		if DamageData.DamageType == DMG_BLAST then
+			DamageData.Damage = DamageData.Damage * 1.1
+		end
+	end
+	
+	return DamageData
+	
+end
+
+function PERK_FakeDeath1(DamageData)
+
+	if DamageChecker(DamageData) == false then return DamageData end
+
+	if TableSearcher(DamageData.Victim.ClassNumber,"FakeDeath") == true then --MUST BE LAST
+	
+		if not DamageData.Victim.FakeDeathCoolDown then
+			DamageData.Victim.FakeDeathCoolDown = 0
+		end
+		
+		if not DamageData.Victim.Cloaked then
+			DamageData.Victim.Cloaked = false
+		end
+		
+		if not DamageData.Victim.HealthCoolDown then
+			DamageData.Victim.HealthCoolDown = 0
+		end
+	
+		if CurTime() <= DamageData.Victim.HealthCoolDown then
+			DamageData.Damage = 0
+		end
+	
+		if DamageData.HitGroup == HITGROUP_HEAD then
+			secretmul = 0 --basically headshots don't trigger it
+		else
+			secretmul = 1
+		end
+		
+		if DamageData.Damage*secretmul > DamageData.Victim:Health() - 10 then	
+			if DamageData.Victim.FakeDeathCoolDown < CurTime() then
+				DamageData.Victim.FakeDeathCoolDown = CurTime() + 10
+				DamageData.Victim.HealthCoolDown = CurTime() + 1
+				DamageData.Damage = 0
+				DamageData.Victim:CreateRagdoll()
+
+				DamageData.Victim:SetArmor(100)
+				
+				timer.Create("cloakrunout"..DamageData.Victim:EntIndex(),0.05, 0, function()
+					if DamageData.Victim:Armor() > 1 and DamageData.Victim:Alive() then
+						DamageData.Victim:SetArmor(DamageData.Victim:Armor()-1)
+					else
+						DamageData.Victim.Cloaked = false
+						DamageData.Attacker:SetMaterial("")
+						if DamageData.Attacker:GetActiveWeapon():IsValid() then
+							DamageData.Attacker:GetActiveWeapon():SetMaterial("")
+						end
+						timer.Destroy("cloakrunout" .. DamageData.Victim:EntIndex())
+					end
+				end)
+				
+				net.Start( "PlayerKilledByPlayer" )
+					net.WriteEntity( DamageData.Victim )
+					net.WriteString( DamageData.Attacker:GetActiveWeapon():GetClass() )
+					net.WriteEntity( DamageData.Attacker )
+				net.Broadcast()
+				
+				timer.Simple(0.01,function()
+					DamageData.Victim:SetMaterial("models/effects/vol_light001")
+				end)
+
+				
+				DamageData.Victim:GetActiveWeapon():SetMaterial("models/effects/vol_light001")
+				DamageData.Victim.Cloaked = true
+			end
+		end
+		
+	end
+	
+	return DamageData
+	
+end
+
+function PERK_FakeDeath2(DamageData)
+
+	if DamageChecker(DamageData) == false then return DamageData end
+
+	if TableSearcher(DamageData.Attacker.ClassNumber,"FakeDeath") == true then
+	
+		if not DamageData.Attacker.FakeDeathCoolDown then
+			DamageData.Attacker.FakeDeathCoolDown = 0
+		end
+		
+		if not DamageData.Attacker.Cloaked then
+			DamageData.Attacker.Cloaked = false
+		end
+	
+	
+		DamageData.Attacker:SetMaterial("")
+		DamageData.Attacker:GetActiveWeapon():SetMaterial("")
+	
+		if DamageData.Attacker.Cloaked == true then 
+			DamageData.Damage = DamageData.Damage * 2
+			DamageData.Victim:EmitSound("player/crit_received1.wav",50,100)
+			DamageData.Attacker:EmitSound("player/crit_hit.wav",50,100)
+			DamageData.Attacker.Cloaked = false
+		end
+		
+		
+		
+	end
+	
+	return DamageData
+	
+end
+
+function PERK_FlakJacketMajor(DamageData)
+
+	if DamageChecker(DamageData) == false then return DamageData end
+
+	if TableSearcher(DamageData.Victim.ClassNumber,"FlakJacketMajor") == true then
+		if DamageData.DamageType == DMG_BLAST then
+		
+			DamageData.Attacker:TakeDamage(DamageData.Damage*0.1, DamageData.Victim, DamageData.Attacker:GetActiveWeapon())
+			DamageData.Damage = DamageData.Damage * 0.5
+			DamageData.Victim:EmitSound("player/pl_scout_jump"..math.random(1,4)..".wav",50,100)
+			
+			DamageData.Damage = DamageData.Damage * DamageScale
+			
+		end
+		
+		
+	end
+	
+	return DamageData
+	
+end
+
+function PERK_FlakJacketMinor(DamageData)
+
+	if DamageChecker(DamageData) == false then return DamageData end
+
+	if TableSearcher(DamageData.Victim.ClassNumber,"FlakJacketMinor") == true then
+		if DamageData.DamageType == DMG_BLAST then
+			DamageData.Damage = DamageData.Damage * 0.85
+		end
+	end
+	
+	return DamageData
+	
+end
+
+function PERK_Forced(DamageData)
+
+	if DamageChecker(DamageData) == false then return DamageData end
+
+	if TableSearcher(DamageData.Attacker.ClassNumber,"Forced") == true then
+	
+		DamageData.Damage = math.max(1,DamageData.Damage - 50) * 3
+	
+	end
+	
+	return DamageData
+end
+
+
+function PERK_FrontDoor(DamageData)
+
+	if DamageChecker(DamageData) == false then return DamageData end
+
+	if TableSearcher(DamageData.Victim.ClassNumber,"FrontDoor") == true then
+		ang1 = DamageData.Victim:GetAngles().y
+		ang2 = DamageData.Attacker:GetAngles().y
+		local DamageBlock = math.random(10,30)
+		if ang1 - ang2 > 45 and ang1 - ang2 < -45 then
+			DamageData.Victim:EmitSound("weapons/fx/rics/ric"..math.random(1,5)..".wav",50,100)
+			DamageData.Attacker:EmitSound("weapons/fx/rics/ric"..math.random(1,5)..".wav",50,100)
+			
+			DamageData.Damage = math.max(0,DamageData.Damage - DamageBlock)
+			
+		end
+	end
+	
+	return DamageData
+	
+end
+
+function PERK_HeadshotHunter(DamageData)
+
+	if DamageChecker(DamageData) == false then return DamageData end
+
+	if TableSearcher(DamageData.Attacker.ClassNumber,"HeadshotHunter") == true then
+	
+		local DamageScale = 0.5
+	
+		if DamageData.HitGroup == HITGROUP_HEAD then
+			DamageScale = 2
+			DamageData.Victim:EmitSound("player/headshot"..math.random(1,2)..".wav",50,100)
+		end
+		
+		DamageData.Damage = DamageData.Damage * DamageScale
+		
+	end
+	
+	return DamageData
+	
+end
+
+function PERK_Helmet(DamageData)
+
+	if DamageChecker(DamageData) == false then return DamageData end
+
+	if TableSearcher(DamageData.Victim.ClassNumber,"Helmet") == true then
+		if DamageData.HitGroup == HITGROUP_HEAD then
+		
+			DamageData.Victim:EmitSound("player/kevlar"..math.random(1,5)".wav",100,100)
+			DamageData.Damage = DamageData.Damage * 0.8
+			
+		end
+	end
+	
+	return DamageData
+	
+end
+
+function PERK_Kevlar(DamageData)
+
+	if DamageChecker(DamageData) == false then return DamageData end
+	
+	if TableSearcher(DamageData.Victim.ClassNumber,"Kevlar") == true then
+		if DamageData.HitGroup ~= HITGROUP_HEAD then
+
+			DamageData.Victim:EmitSound("player/kevlar"..math.random(1,5)..".wav",100,100)
+			DamageData.Damage = DamageData.Damage * 0.75
+			
+		end
+	end
+	
+	return DamageData
+	
+end
+
+function PERK_LifeSteal(DamageData)
+
+	if DamageChecker(DamageData) == false then return DamageData end
+
+	if TableSearcher(DamageData.Attacker.ClassNumber,"LifeSteal") == true then
+		
+		DamageData.Attacker:SetHealth(math.Clamp( DamageData.Attacker:Health() + math.max(0,DamageData.Damage*0.2) , 1 , 200 ) )
+		
+	end	
+	
+	return DamageData
+	
+end
+	
+function PERK_ReflectDamage1(DamageData)
+
+	if DamageChecker(DamageData) == false then return DamageData end
+
+	if TableSearcher(DamageData.Attacker.ClassNumber,"ReflectDamage") == true then
+		DamageData.Damage = DamageData.Damage * 0.75
+	end
+	
+	return DamageData
+	
+end
+	
+function PERK_ReflectDamage2(DamageData)
+
+	if DamageChecker(DamageData) == false then return DamageData end
+
+	if TableSearcher(DamageData.Victim.ClassNumber,"ReflectDamage") == true then
+		if TableSearcher(DamageData.Attacker.ClassNumber,"ReflectDamage") == false then
+			DamageData.Attacker:TakeDamage(DamageData.Damage*0.25, DamageData.Victim, DamageData.Attacker:GetActiveWeapon())
+		end
+	end
+	
+	return DamageData
+	
+end		
+
+function PERK_Reversal(DamageData)
+
+	if DamageChecker(DamageData) == false then return DamageData end
+
+	if TableSearcher(DamageData.Victim.ClassNumber,"Reversal") == true and math.random(0,100) >= 90 then
+	
+		DamageData.Victim:EmitSound("items/smallmedkit1.wav",100,100)
+		
+		if (DamageData.Victim:Health() + DamageData.Damage) >= DamageData.Victim:GetMaxHealth() then 
+			DamageData.Victim:SetHealth(DamageData.Victim:GetMaxHealth())
+		else
+			DamageData.Victim:SetHealth(DamageData.Victim:Health() + DamageData.Damage )
+		end
+		
+		DamageData.Damage = 0
+	end
+	
+	return DamageData
+	
+end
+
+
+
+function PERK_Shatter(DamageData)
+
+	if DamageChecker(DamageData) == false then return DamageData end
+
+	if TableSearcher(DamageData.Victim.ClassNumber,"Shatter") == true then
+
+		if not DamageData.Victim.Immunity then 
+			DamageData.Victim.Immunity = 0
+		end
+
+		if DamageData.Victim:Armor() > 0 then
+			if DamageData.Victim.Immunity == 0 then
+				DamageData.Victim.Immunity = 1
+				
+				local actualdamage = DamageInfo()
+				actualdamage:SetDamage(DamageData.Damage*1.5)
+				actualdamage:SetAttacker(DamageData.Attacker)
+				actualdamage:SetInflictor(DamageData.Attacker:GetActiveWeapon())
+				actualdamage:SetDamageType(DMG_BULLET)
+				
+				DamageData.Victim:TakeDamageInfo( actualdamage )
+				DamageData.Victim.Stun = 1
+				DamageData.Victim:SetMaterial("brick/brick_model.vmf")
+				DamageData.Victim:EmitSound("weapons/demo_charge_hit_world"..math.random(1,3)..".wav")
+				timer.Simple(1,function() 
+					DamageData.Victim.Immunity = 0
+					DamageData.Victim:SetMaterial("")
+				end)
+			end
+		end
+		
+		if DamageData.Victim.Immunity == 1 then
+			DamageData.Damage = 0
+		end
+
+	end	
+	
+	return DamageData
+	
+end
+
+function PERK_Shield(DamageData)
+
+	if DamageChecker(DamageData) == false then return DamageData end
+	
+	if TableSearcher(DamageData.Victim.ClassNumber,"Shield") == true and math.random(0,100) >= 40 then
+		--print("BLOCK")
+		local DamageBlock = math.random(10,20)	
+		if DamageData.Damage - DamageBlock <= 0 then
+			DamageData.Victim:EmitSound("weapons/fx/rics/ric"..math.random(1,5)..".wav",50,100)
+		else
+			DamageData.Victim:EmitSound("weapons/spy_assassin_knife_impact_02.wav",50,math.random(90,110))
+		end
+		
+		DamageData.Damage = math.max(0,DamageData.Damage - DamageBlock)
+		
+	end
+	
+	return DamageData
+	
+end
+
+function PERK_SoulAbsorb(DamageData)
+
+	if DamageChecker(DamageData) == false then return DamageData end
+	
+	if TableSearcher(DamageData.Attacker.ClassNumber,"SoulAbsorb") == true then
+		DamageData.Attacker.SoulCount = DamageData.Attacker.SoulCount + math.floor(DamageData.Damage)
+		DamageData.Attacker.SoulsDelivered = DamageData.Attacker.SoulCount + math.floor(DamageData.Damage)
+	end
+	
+	return DamageData
+	
+end
+
+function PERK_Splash(DamageData)
+
+	if DamageChecker(DamageData) == false then return DamageData end
+	
+	if TableSearcher(DamageData.Attacker.ClassNumber,"Splash") == true then
+		local result = ents.FindInSphere(DamageData.Victim:GetPos(),1000)
+		local resultCount = table.Count(result)
+		for i=1, resultCount do
+			if result[i]:IsPlayer() == true then
+			
+				if result[i] ~= DamageData.Victim and result[i] ~= DamageData.Attacker then		
+					if (result[i]:Team() == DamageData.Attacker:Team() and DamageData.Victim:Team() == 1001) or (result[i]:Team() ~= DamageData.Attacker:Team() and DamageData.Victim:Team() ~= 1001) then
+						result[i]:TakeDamage(DamageData.Damage*0.25,  DamageData.Attacker, DamageData.Attacker:GetActiveWeapon())
+					end
+				end
+				
+			end
+		end
+	end
+	
+	return DamageData
+	
+end
+
+function PERK_Stunner(DamageData)
+
+	if DamageChecker(DamageData) == false then return DamageData end
+
+	if TableSearcher(DamageData.Attacker.ClassNumber,"Stunner") == true && math.random(0,100) >= 100 - (DamageData.Damage/2) then
+		DamageData.Damage = DamageData.Damage * 2
+		DamageData.Victim:EmitSound("player/crit_received1.wav",100,100)
+		DamageData.Attacker:EmitSound("player/crit_hit.wav",100,100)
+		DamageData.Victim.Stun = 0.25
+	end
+	
+	return DamageData
+	
+end
+
+function PERK_Survivor(DamageData)
+
+	if DamageChecker(DamageData) == false then return DamageData end
+
+	if TableSearcher(DamageData.Victim.ClassNumber,"Survivor") == true then
+		DamageData.Damage = DamageData.Damage * ( 1 - math.Clamp(DamageData.Attacker:GetMaxHealth()-DamageData.Attacker:Health(),0,50)/100 )
+	end	
+	
+	return DamageData
+	
+end
+
+function PERK_Swap(DamageData)
+
+	if DamageChecker(DamageData) == false then return DamageData end
+
+	if TableSearcher(DamageData.Victim.ClassNumber,"Swap") == true then
+
+		if not DamageData.Victim.NextSwapTime then
+			DamageData.Victim.NextSwapTime = 0 
+		end
+	
+		if DamageData.Victim:Health() < 50 then 
+			if DamageData.Victim:Alive() == false then return end
+			if DamageData.Victim.NextSwapTime <= CurTime() then
+				DamageData.Damage = 0
+				DamageData.Victim.NextSwapTime = CurTime() + 60
+				local Players = player.GetAll()
+				local rand = math.random(1,table.Count(Players))
+				local toSwap = Players[rand]
+				if toSwap == DamageData.Victim then
+					if rand+1<= table.Count(Players) then
+						toSwap = Players[rand+1]
+						debugnum = rand+1
+					else
+						debugnum = rand-1
+						toSwap = Players[rand-1]
+					end
+				end
+				local pos1 = DamageData.Victim:GetPos()
+				local pos2 = toSwap:GetPos()
+				DamageData.Victim:SetPos(pos2)
+				toSwap:SetPos(pos1)
+				DamageData.Victim.Stun = 0.5
+				toSwap.Stun = 0.5
+				DamageData.Victim:EmitSound("ambient/machines/teleport4.wav",100,100)
+				toSwap:EmitSound("ambient/machines/teleport4.wav",100,100)
+			end
+		end
+	end
+	
+	return DamageData
+	
+end
+
+function PERK_Trap(DamageData)
+
+	if DamageChecker(DamageData) == false then return DamageData end
+
+	if TableSearcher(DamageData.Attacker.ClassNumber,"Trap") == true then
+		if DamageData.DamageType == DMG_BLAST then
+			DamageData.Victim.Stun = DamageData.Damage*0.05
+			DamageData.Damage = 0
+		end
+	end
+	
+	return DamageData
+	
+end
+
+function DamageChecker(DamageData)
+
+	--PrintTable(DamageData)
+
+	if DamageData.Damage < 1 then 
+		return false
+	end
+
+end
+
+print("sv_class_perks_damage loaded")
