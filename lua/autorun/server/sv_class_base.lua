@@ -21,14 +21,14 @@ function ChangeClass( ply, cmd, args )
 	if type(num) ~= "number" then return end
 	
 	if num <= table.Count(Class) then
-
+	
 		ply.ClassNumberTo = num
+	
+		
 	
 		ply.ClassName = Class[num]["name"]
 		ply.ClassDescription = Class[num]["description"]
 		
-		--ply:ChatPrint("Your class will change to "..Class[num]["name"]..".")
-		--ply.ClassChanged = true
 		ply:Spawn()
 		ply.HasChangedClass = true
 
@@ -36,20 +36,20 @@ function ChangeClass( ply, cmd, args )
 		ply:ChatPrint("INVALID CLASS")
 	return end
 	
-	local message = ply:Nick().." has changed his class to " .. Class[num]["name"]
+	--if not ply:IsBot() then
 	
-	if num == 23 then
-		message = ply:Nick().." has changed his class to " .. Class[math.random(1,22)]["name"]
-	end
-	
-	
-	for k,v in pairs(player.GetAll()) do
-		v:ChatPrint( message )
-	end
+		net.Start("ClassModPlayerClassChange")
+			net.WriteEntity(ply)
+			net.WriteFloat(num)
+		net.Broadcast()
+		
+	--end
 	
 end
 
 concommand.Add("changeclass", ChangeClass)
+
+ util.AddNetworkString("ClassModPlayerClassChange")
 
 function ForceClass(ply,cmd,args)
 	--if ply:IsAdmin() == true or ply:IsSuperAdmin() == true then
@@ -86,6 +86,27 @@ function ForceClass(ply,cmd,args)
 end
 
 concommand.Add("forceclass", ForceClass)
+
+function BotClass(ply,num)
+
+	ply.ClassNumberTo = num
+
+	ply.ClassName = Class[num]["name"]
+	ply.ClassDescription = Class[num]["description"]
+	
+	ply:Spawn()
+	ply.HasChangedClass = true
+	
+	net.Start("ClassModPlayerClassChange")
+		net.WriteEntity(ply)
+		net.WriteFloat(num)
+	net.Broadcast()
+	
+	print("AND I GOT " .. Class[num]["name"])
+	
+	
+end
+
 
 
 

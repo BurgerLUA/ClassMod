@@ -1,3 +1,42 @@
+
+surface.CreateFont( "TitleFont", {
+	font = "roboto condensed", 
+	size = 40, 
+	weight = 100, 
+	blursize = 0, 
+	scanlines = 0, 
+	antialias = true, 
+	underline = false, 
+	italic = true, 
+	strikeout = false, 
+	symbol = false, 
+	rotary = false, 
+	shadow = false, 
+	additive = false, 
+	outline = false, 
+} )
+
+
+
+surface.CreateFont( "DescFont", {
+	font = "roboto condensed", 
+	size = 24, 
+	weight = 0, 
+	blursize = 0, 
+	scanlines = 0, 
+	antialias = true, 
+	underline = false, 
+	italic = false, 
+	strikeout = false, 
+	symbol = false, 
+	rotary = false, 
+	shadow = false, 
+	additive = false, 
+	outline = false, 
+} )
+
+
+
 function ClassSelectorDerma()
 
 	LocalPlayer().SelectedClass = LocalPlayer():GetNWInt("classnum")
@@ -94,8 +133,8 @@ function ClassSelectorDerma()
 		local NameText = vgui.Create( "DLabel", ListItem )
 			NameText:SetPos( 50, 10 )
 			NameText:SetText( Class[i]["name"] )
-			NameText:SetFont( "Trebuchet24" )
-			NameText:SizeToContents()
+			NameText:SetFont( "TitleFont" )
+			NameText:SetSize( 1000, 50)
 			NameText:SetDark(true)
 			
 		local TagBase = vgui.Create("DPanel",ListItem)
@@ -137,6 +176,7 @@ function ClassSelectorDerma()
 			table.insert(ClassStats,"+" .. tostring(Class[i]["armor"]) .. "% Armor")
 		end
 		
+		--[[
 		if Class[i]["stamina"]*5 ~= 100 then
 			if Class[i]["stamina"]*5 > 100 then
 				table.insert(ClassStats,"+" .. tostring(math.abs((Class[i]["stamina"]*5)-100)) .. "% Stamina")
@@ -144,7 +184,7 @@ function ClassSelectorDerma()
 				table.insert(ClassStats,tostring((Class[i]["stamina"]*5)-100) .. "% Stamina")
 			end	
 		end
-		
+		--]]
 
 		
 		if Class[i]["walkspeedmul"] ~= 1 then
@@ -187,25 +227,30 @@ function ClassSelectorDerma()
 		local Desc = vgui.Create("DLabel")
 			Desc:SetParent(Scroll2)
 			Desc:SetPos(5,5)
+			Desc:SetFont("DescFont")
+			Desc:SetColor(Color(255,255,255,255))
 			Desc:SetSize(TagBase:GetWide() - 5 - 20,TagBase:GetTall()*0.5)
 			Desc:SetText( Class[i]["description"] )
 			Desc:SetAutoStretchVertical(true)
 			--Desc:SizeToContents(true)
-			Desc:SetDark(true)
 			
 			Desc:SetWrap(true)
 			
 			
 		for i=1, table.Count(ClassStats) do
+
 			Tag[i] = vgui.Create( "DLabel" )
 			Tag[i]:SetParent(TagBase)
-			
-			--Tag[i]:SetPos(5,i*18 - 18 + ScrW()*0.25 - ScrW()*0.005 - ScrH()*0.2/4 - 3*18)
+
 			Tag[i]:SetPos(5,Desc:GetTall()*0.5 + i*18)
+			Tag[i]:SetFont("DescFont")
+			Tag[i]:SetColor(Color(255,255,255,255))
+			
 			Tag[i]:SetSize(0,0)
 			Tag[i]:SetText( ClassStats[i])
-			Tag[i]:SetFont( "HudSelectionText" )
-			Tag[i]:SetDark(true)
+			
+
+
 			Tag[i]:SizeToContents(true)
 		end
 		
@@ -221,9 +266,19 @@ end
 
 concommand.Add("selectclass", ClassSelectorDerma)
 
-function ClassChat( ply, strText, bTeamOnly, bPlayerIsDead )
 
- 
-end
 
-hook.Add("OnPlayerChat", "Player Chat", ClassChat)
+net.Receive("ClassModPlayerClassChange", function(len)
+	
+	local ply = net.ReadEntity()
+	local classnum = net.ReadFloat()
+	
+	local teamcolor = team.GetColor(ply:Team())
+	local classcolor = Class[classnum]["color"]
+	local classname = Class[classnum]["name"]
+	
+	ply.ClientSideClassNumber = classnum
+	
+	chat.AddText(teamcolor,ply:Nick(),Color(255,255,255,255)," has changed their class to ",classcolor,classname)
+
+end)

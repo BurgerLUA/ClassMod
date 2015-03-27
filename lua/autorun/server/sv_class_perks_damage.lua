@@ -2,55 +2,84 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 
 	if dmginfo:GetAttacker():IsPlayer() and dmginfo:GetAttacker() ~= ply then 
 	
-		local DamageData = {}
-		DamageData.Victim = ply
-		DamageData.Attacker = dmginfo:GetAttacker()
-		DamageData.Damage = dmginfo:GetDamage()
-		DamageData.HitGroup = hitgroup
-		DamageData.DamageType = dmginfo:GetDamageType()
-		
-		local OldDamage = dmginfo:GetDamage()
+		if not ply:HasGodMode() and GetConVarNumber("sbox_godmode") == 0 then
+	
+			local DamageData = {}
+			DamageData.Victim = ply
+			DamageData.Attacker = dmginfo:GetAttacker()
+			DamageData.Damage = dmginfo:GetDamage()
+			DamageData.HitGroup = hitgroup
+			DamageData.DamageType = dmginfo:GetDamageType()
+			
+			local OldDamage = dmginfo:GetDamage()
 
-		DamageData = PERK_Forced(DamageData)
-		DamageData = PERK_Evasion(DamageData)
-		DamageData = PERK_Splash(DamageData)
-		DamageData = PERK_Stunner(DamageData)
-		DamageData = PERK_DamageTrade1(DamageData)
-		DamageData = PERK_DamageTrade2(DamageData)
-		DamageData = PERK_Swap(DamageData)
-		DamageData = PERK_Survivor(DamageData)
-		DamageData = PERK_SoulAbsorb(DamageData)
-		DamageData = PERK_Helmet(DamageData)
-		DamageData = PERK_Kevlar(DamageData)
-		DamageData = PERK_Shield(DamageData)
-		DamageData = PERK_AP(DamageData)
-		DamageData = PERK_BrainDamage(DamageData)
-		DamageData = PERK_HeadshotHunter(DamageData)
-		DamageData = PERK_ReflectDamage1(DamageData)
-		DamageData = PERK_ReflectDamage2(DamageData)
-		DamageData = PERK_FlakJacketMajor(DamageData)
-		DamageData = PERK_FlakJacketMinor(DamageData)
-		DamageData = PERK_Explosive(DamageData)
-		DamageData = PERK_Drain(DamageData)
-		DamageData = PERK_Reversal(DamageData)
-		DamageData = PERK_Trap(DamageData)
-		DamageData = PERK_ArmorRegen(DamageData)
-		DamageData = PERK_Shatter(DamageData)
-		DamageData = PERK_Bargain(DamageData)
-		DamageData = PERK_ArmorDependant(DamageData)
-		DamageData = PERK_FrontDoor(DamageData)
-		DamageData = PERK_BackDoor(DamageData)
-		DamageData = PERK_FakeDeath1(DamageData)
-		DamageData = PERK_FakeDeath2(DamageData)
-		
-		--ply:SetNWInt(attacker:EntIndex(), ply:GetNWInt(attacker:EntIndex()) + (HiddenScale * DamageScale * dmginfo:GetBaseDamage()))
-		
-		if OldDamage ~= DamageData.Damage then
-			print(OldDamage .. "=>" .. DamageData.Damage)
-		end
-		
-		if DamageData.Damage then
-			dmginfo:SetDamage(DamageData.Damage)
+			--HARD DAMAGE PREVETION
+			DamageData = DMGPERK_Evasion(DamageData)
+			
+			--DAMAGE SUBTRACTION
+			DamageData = DMGPERK_Shield(DamageData)
+			DamageData = DMGPERK_FrontDoor(DamageData)
+			DamageData = DMGPERK_BackDoor(DamageData)
+			DamageData = DMGPERK_Bargain(DamageData)
+			DamageData = DMGPERK_Forced(DamageData)
+			
+			--DAMAGE MULTIFPLICATION
+			DamageData = DMGPERK_Trap(DamageData)
+			DamageData = DMGPERK_Shatter(DamageData)
+			DamageData = DMGPERK_AP(DamageData)
+			DamageData = DMGPERK_BrainDamage(DamageData)
+			DamageData = DMGPERK_FlakJacketMajor(DamageData)
+			DamageData = DMGPERK_FlakJacketMinor(DamageData)
+			DamageData = DMGPERK_Explosive(DamageData)
+			DamageData = DMGPERK_HeadshotHunter(DamageData)
+			DamageData = DMGPERK_Helmet(DamageData)
+			DamageData = DMGPERK_Kevlar(DamageData)
+			DamageData = DMGPERK_Survivor(DamageData)
+			DamageData = DMGPERK_DamageTrade1(DamageData)
+			DamageData = DMGPERK_DamageTrade2(DamageData)
+			DamageData = DMGPERK_ReflectDamage1(DamageData) -- Damage Reduction
+			
+			--DAMAGE AVOIDANCE
+			DamageData = DMGPERK_FakeDeath1(DamageData)
+			DamageData = DMGPERK_FakeDeath2(DamageData)
+			DamageData = DMGPERK_Swap(DamageData)
+			DamageData = DMGPERK_ArmorDependant(DamageData)
+			
+			--DAMAGE THEIVERY
+			DamageData = DMGPERK_LifeSteal(DamageData)
+			DamageData = DMGPERK_ArmorSteal(DamageData)
+			
+			--DAMAGE TRANSFER
+			DamageData = DMGPERK_Splash(DamageData)
+			DamageData = DMGPERK_ReflectDamage2(DamageData) -- Damage Reflect
+			DamageData = DMGPERK_Reversal(DamageData)
+			DamageData = DMGPERK_SoulAbsorb(DamageData)
+			DamageData = DMGPERK_Stunner(DamageData)
+			
+			--MISC
+			DamageData = DMGPERK_ArmorRegen(DamageData)
+			DamageData = DMGPERK_Drain(DamageData) -- USELESS
+			--DamageData = DMGPERK_Slayer(DamageData)
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			--ply:SetNWInt(attacker:EntIndex(), ply:GetNWInt(attacker:EntIndex()) + (HiddenScale * DamageScale * dmginfo:GetBaseDamage()))
+			
+			if OldDamage ~= DamageData.Damage then
+				print(OldDamage .. "=>" .. DamageData.Damage)
+			end
+			
+			if DamageData.Damage then
+				dmginfo:SetDamage(DamageData.Damage)
+			end
+			
 		end
 		
 	end	
@@ -61,19 +90,25 @@ end
 
 hook.Add("ScalePlayerDamage","Scale Class Damage",ScaleClassDamage)
 
-function PERK_AP(DamageData)
+function DMGPERK_AP(DamageData)
 
 	if DamageChecker(DamageData) == false then return DamageData end
 	
 	if TableSearcher(DamageData.Attacker.ClassNumber,"AP") == true then
-		DamageScale = math.Clamp( (DamageData.Victim:Armor()*0.01) - 0.25, 0.25, 1 )
+	
+		if DamageData.Victim:Armor() > 0 then
+			DamageScale = DamageData.Victim:Armor()*0.01
+		else
+			DamageScale = -0.5
+		end
+		
 		if DamageScale > 1 then
 			DamageData.Victim:EmitSound("mvm/melee_impacts/arrow_impact_robo0"..math.random(1,3)..".wav",100,100)
 		else
 			DamageData.Victim:EmitSound("mvm/melee_impacts/blade_hit_robo0"..math.random(1,3)..".wav",100,100)
 		end
 		
-		DamageData.Damage = DamageData.Damage * DamageScale
+		DamageData.Damage = DamageData.Damage + (DamageData.Damage * DamageScale)
 
 	end
 	
@@ -81,7 +116,7 @@ function PERK_AP(DamageData)
 	
 end
 
-function PERK_ArmorDependant(DamageData)
+function DMGPERK_ArmorDependant(DamageData)
 
 	if DamageChecker(DamageData) == false then return DamageData end
 	
@@ -102,7 +137,7 @@ function PERK_ArmorDependant(DamageData)
 	
 end
 
-function PERK_ArmorRegen(DamageData)
+function DMGPERK_ArmorRegen(DamageData)
 
 	if DamageChecker(DamageData) == false then return DamageData end
 	
@@ -114,7 +149,7 @@ function PERK_ArmorRegen(DamageData)
 	
 end
 
-function PERK_ArmorSteal(DamageData)
+function DMGPERK_ArmorSteal(DamageData)
 
 	if DamageChecker(DamageData) == false then return DamageData end
 	
@@ -130,7 +165,7 @@ function PERK_ArmorSteal(DamageData)
 	
 end
 
-function PERK_BackDoor(DamageData)
+function DMGPERK_BackDoor(DamageData)
 
 	if DamageChecker(DamageData) == false then return DamageData end
 	
@@ -152,13 +187,13 @@ function PERK_BackDoor(DamageData)
 	
 end
 
-function PERK_Bargain(DamageData)
+function DMGPERK_Bargain(DamageData)
 
 	if DamageChecker(DamageData) == false then return DamageData end
 	
 	if TableSearcher(DamageData.Attacker.ClassNumber,"Bargain") == true then
 
-		DamageData.Damage = math.max(1,(DamageData.Damage - 10) * 2)
+		DamageData.Damage = math.max(1,(DamageData.Damage - 5) * 2)
 		
 		if DamageData.Damage == 1 then
 			DamageData.Victim:EmitSound("weapons/fx/rics/ric"..math.random(1,5)..".wav",50,100)
@@ -171,7 +206,7 @@ function PERK_Bargain(DamageData)
 	
 end
 
-function PERK_BrainDamage(DamageData)
+function DMGPERK_BrainDamage(DamageData)
 
 	if DamageChecker(DamageData) == false then return DamageData end
 	
@@ -192,7 +227,7 @@ function PERK_BrainDamage(DamageData)
 	
 end
 
-function PERK_DamageTrade1(DamageData)
+function DMGPERK_DamageTrade1(DamageData)
 
 	if DamageChecker(DamageData) == false then return DamageData end
 	
@@ -204,7 +239,7 @@ function PERK_DamageTrade1(DamageData)
 	
 end
 	
-function PERK_DamageTrade2(DamageData)
+function DMGPERK_DamageTrade2(DamageData)
 
 	if DamageChecker(DamageData) == false then return DamageData end
 
@@ -217,7 +252,7 @@ function PERK_DamageTrade2(DamageData)
 end
 
 
-function PERK_Drain(DamageData) --Useless 
+function DMGPERK_Drain(DamageData) --Useless 
 
 	if DamageChecker(DamageData) == false then return DamageData end
 	
@@ -241,14 +276,15 @@ function PERK_Drain(DamageData) --Useless
 	
 end
 
-function PERK_Evasion(DamageData)
+function DMGPERK_Evasion(DamageData)
 
 	if DamageChecker(DamageData) == false then return DamageData end
 
 	if TableSearcher(DamageData.Victim.ClassNumber,"Evasion") == true and math.random(0,100) >= 80 then
 	
 		DamageData.Damage = 0
-		DamageData.Victim:EmitSound("weapons/fx/nearmiss/bulletltor"..math.random(10,14)..".wav",100,math.random(90,110))
+		DamageData.Victim:EmitSound("weapons/barret_arm_shot.wav",100,math.random(90,110))
+		DamageData.Attacker:EmitSound("weapons/barret_arm_shot.wav",100,math.random(90,110))
 		
 	end
 	
@@ -256,7 +292,7 @@ function PERK_Evasion(DamageData)
 	
 end
 
-function PERK_Explosive(DamageData)
+function DMGPERK_Explosive(DamageData)
 
 	if DamageChecker(DamageData) == false then return DamageData end
 
@@ -270,7 +306,7 @@ function PERK_Explosive(DamageData)
 	
 end
 
-function PERK_FakeDeath1(DamageData)
+function DMGPERK_FakeDeath1(DamageData)
 
 	if DamageChecker(DamageData) == false then return DamageData end
 
@@ -308,7 +344,7 @@ function PERK_FakeDeath1(DamageData)
 				DamageData.Victim:SetArmor(100)
 				
 				timer.Create("cloakrunout"..DamageData.Victim:EntIndex(),0.05, 0, function()
-					if DamageData.Victim:Armor() > 1 and DamageData.Victim:Alive() then
+					if DamageData.Victim:Armor() > 0 and DamageData.Victim:Alive() then
 						DamageData.Victim:SetArmor(DamageData.Victim:Armor()-1)
 					else
 						DamageData.Victim.Cloaked = false
@@ -322,6 +358,13 @@ function PERK_FakeDeath1(DamageData)
 				
 				net.Start( "PlayerKilledByPlayer" )
 					net.WriteEntity( DamageData.Victim )
+					
+					local weapon = "weapon_cs_flashbang"
+					
+					if IsValid(DamageData.Attacker:GetActiveWeapon()) then
+						weapon = DamageData.Attacker:GetActiveWeapon():GetClass()
+					end
+					
 					net.WriteString( DamageData.Attacker:GetActiveWeapon():GetClass() )
 					net.WriteEntity( DamageData.Attacker )
 				net.Broadcast()
@@ -331,7 +374,7 @@ function PERK_FakeDeath1(DamageData)
 				end)
 
 				
-				DamageData.Victim:GetActiveWeapon():SetMaterial("models/effects/vol_light001")
+				--DamageData.Victim:GetActiveWeapon():SetMaterial("models/effects/vol_light001")
 				DamageData.Victim.Cloaked = true
 			end
 		end
@@ -342,7 +385,7 @@ function PERK_FakeDeath1(DamageData)
 	
 end
 
-function PERK_FakeDeath2(DamageData)
+function DMGPERK_FakeDeath2(DamageData)
 
 	if DamageChecker(DamageData) == false then return DamageData end
 
@@ -375,7 +418,7 @@ function PERK_FakeDeath2(DamageData)
 	
 end
 
-function PERK_FlakJacketMajor(DamageData)
+function DMGPERK_FlakJacketMajor(DamageData)
 
 	if DamageChecker(DamageData) == false then return DamageData end
 
@@ -397,7 +440,7 @@ function PERK_FlakJacketMajor(DamageData)
 	
 end
 
-function PERK_FlakJacketMinor(DamageData)
+function DMGPERK_FlakJacketMinor(DamageData)
 
 	if DamageChecker(DamageData) == false then return DamageData end
 
@@ -411,7 +454,7 @@ function PERK_FlakJacketMinor(DamageData)
 	
 end
 
-function PERK_Forced(DamageData)
+function DMGPERK_Forced(DamageData)
 
 	if DamageChecker(DamageData) == false then return DamageData end
 
@@ -425,7 +468,7 @@ function PERK_Forced(DamageData)
 end
 
 
-function PERK_FrontDoor(DamageData)
+function DMGPERK_FrontDoor(DamageData)
 
 	if DamageChecker(DamageData) == false then return DamageData end
 
@@ -446,7 +489,7 @@ function PERK_FrontDoor(DamageData)
 	
 end
 
-function PERK_HeadshotHunter(DamageData)
+function DMGPERK_HeadshotHunter(DamageData)
 
 	if DamageChecker(DamageData) == false then return DamageData end
 
@@ -467,7 +510,7 @@ function PERK_HeadshotHunter(DamageData)
 	
 end
 
-function PERK_Helmet(DamageData)
+function DMGPERK_Helmet(DamageData)
 
 	if DamageChecker(DamageData) == false then return DamageData end
 
@@ -484,7 +527,7 @@ function PERK_Helmet(DamageData)
 	
 end
 
-function PERK_Kevlar(DamageData)
+function DMGPERK_Kevlar(DamageData)
 
 	if DamageChecker(DamageData) == false then return DamageData end
 	
@@ -501,13 +544,13 @@ function PERK_Kevlar(DamageData)
 	
 end
 
-function PERK_LifeSteal(DamageData)
+function DMGPERK_LifeSteal(DamageData)
 
 	if DamageChecker(DamageData) == false then return DamageData end
 
 	if TableSearcher(DamageData.Attacker.ClassNumber,"LifeSteal") == true then
 		
-		DamageData.Attacker:SetHealth(math.Clamp( DamageData.Attacker:Health() + math.max(0,DamageData.Damage*0.2) , 1 , 200 ) )
+		DamageData.Attacker:SetHealth(math.Clamp( DamageData.Attacker:Health() + DamageData.Damage*0.2 , 1 , 200 ) )
 		
 	end	
 	
@@ -515,25 +558,30 @@ function PERK_LifeSteal(DamageData)
 	
 end
 	
-function PERK_ReflectDamage1(DamageData)
+function DMGPERK_ReflectDamage1(DamageData)
 
 	if DamageChecker(DamageData) == false then return DamageData end
 
 	if TableSearcher(DamageData.Attacker.ClassNumber,"ReflectDamage") == true then
-		DamageData.Damage = DamageData.Damage * 0.75
+		DamageData.Damage = DamageData.Damage * 0.25
 	end
 	
 	return DamageData
 	
 end
 	
-function PERK_ReflectDamage2(DamageData)
+function DMGPERK_ReflectDamage2(DamageData)
 
 	if DamageChecker(DamageData) == false then return DamageData end
 
 	if TableSearcher(DamageData.Victim.ClassNumber,"ReflectDamage") == true then
 		if TableSearcher(DamageData.Attacker.ClassNumber,"ReflectDamage") == false then
-			DamageData.Attacker:TakeDamage(DamageData.Damage*0.25, DamageData.Victim, DamageData.Attacker:GetActiveWeapon())
+			DamageData.Attacker:TakeDamage(DamageData.Damage*0.75, DamageData.Victim, DamageData.Attacker:GetActiveWeapon())
+			
+			DamageData.Victim:EmitSound("weapons/cow_mangler_reload_final.wav",50,100)
+			DamageData.Attacker:EmitSound("weapons/cow_mangler_reload_final.wav",50,100)
+			
+			
 		end
 	end
 	
@@ -541,19 +589,14 @@ function PERK_ReflectDamage2(DamageData)
 	
 end		
 
-function PERK_Reversal(DamageData)
+function DMGPERK_Reversal(DamageData)
 
 	if DamageChecker(DamageData) == false then return DamageData end
 
 	if TableSearcher(DamageData.Victim.ClassNumber,"Reversal") == true and math.random(0,100) >= 90 then
 	
 		DamageData.Victim:EmitSound("items/smallmedkit1.wav",100,100)
-		
-		if (DamageData.Victim:Health() + DamageData.Damage) >= DamageData.Victim:GetMaxHealth() then 
-			DamageData.Victim:SetHealth(DamageData.Victim:GetMaxHealth())
-		else
-			DamageData.Victim:SetHealth(DamageData.Victim:Health() + DamageData.Damage )
-		end
+		DamageData.Victim:SetHealth(math.Clamp(DamageData.Victim:Health() + DamageData.Damage,1,200))
 		
 		DamageData.Damage = 0
 	end
@@ -564,7 +607,7 @@ end
 
 
 
-function PERK_Shatter(DamageData)
+function DMGPERK_Shatter(DamageData)
 
 	if DamageChecker(DamageData) == false then return DamageData end
 
@@ -605,7 +648,7 @@ function PERK_Shatter(DamageData)
 	
 end
 
-function PERK_Shield(DamageData)
+function DMGPERK_Shield(DamageData)
 
 	if DamageChecker(DamageData) == false then return DamageData end
 	
@@ -626,7 +669,7 @@ function PERK_Shield(DamageData)
 	
 end
 
-function PERK_SoulAbsorb(DamageData)
+function DMGPERK_SoulAbsorb(DamageData)
 
 	if DamageChecker(DamageData) == false then return DamageData end
 	
@@ -639,23 +682,23 @@ function PERK_SoulAbsorb(DamageData)
 	
 end
 
-function PERK_Splash(DamageData)
+function DMGPERK_Splash(DamageData)
 
 	if DamageChecker(DamageData) == false then return DamageData end
 	
 	if TableSearcher(DamageData.Attacker.ClassNumber,"Splash") == true then
-		local result = ents.FindInSphere(DamageData.Victim:GetPos(),1000)
-		local resultCount = table.Count(result)
-		for i=1, resultCount do
-			if result[i]:IsPlayer() == true then
+
+		for k,v in pairs (player.GetAll()) do
 			
-				if result[i] ~= DamageData.Victim and result[i] ~= DamageData.Attacker then		
-					if (result[i]:Team() == DamageData.Attacker:Team() and DamageData.Victim:Team() == 1001) or (result[i]:Team() ~= DamageData.Attacker:Team() and DamageData.Victim:Team() ~= 1001) then
-						result[i]:TakeDamage(DamageData.Damage*0.25,  DamageData.Attacker, DamageData.Attacker:GetActiveWeapon())
-					end
+			if v ~= DamageData.Victim and v ~= DamageData.Attacker then		
+				if (v:Team() == DamageData.Attacker:Team() and DamageData.Victim:Team() == 1001) or (result[i]:Team() ~= DamageData.Attacker:Team() and DamageData.Victim:Team() ~= 1001) then
+					v:TakeDamage(DamageData.Damage*0.03,  DamageData.Attacker, DamageData.Attacker:GetActiveWeapon())
+					
+					v:EmitSound("weapons/fist_hit_world1.wav",50,math.random(90,110))
+					
 				end
-				
 			end
+				
 		end
 	end
 	
@@ -663,7 +706,7 @@ function PERK_Splash(DamageData)
 	
 end
 
-function PERK_Stunner(DamageData)
+function DMGPERK_Stunner(DamageData)
 
 	if DamageChecker(DamageData) == false then return DamageData end
 
@@ -678,7 +721,7 @@ function PERK_Stunner(DamageData)
 	
 end
 
-function PERK_Survivor(DamageData)
+function DMGPERK_Survivor(DamageData)
 
 	if DamageChecker(DamageData) == false then return DamageData end
 
@@ -690,7 +733,7 @@ function PERK_Survivor(DamageData)
 	
 end
 
-function PERK_Swap(DamageData)
+function DMGPERK_Swap(DamageData)
 
 	if DamageChecker(DamageData) == false then return DamageData end
 
@@ -733,7 +776,7 @@ function PERK_Swap(DamageData)
 	
 end
 
-function PERK_Trap(DamageData)
+function DMGPERK_Trap(DamageData)
 
 	if DamageChecker(DamageData) == false then return DamageData end
 
