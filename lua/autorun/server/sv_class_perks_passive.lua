@@ -12,6 +12,7 @@ function CheckPerks()
 			PASPERK_ArmorRegen(v)
 			PASPERK_AuraLeech(v)
 			PASPERK_Bleedout(v)
+			PASPERK_Cannon(v)
 			PASPERK_Cloak(v)
 			PASPERK_DeadLight(v)
 			PASPERK_GlobalKS(v)
@@ -117,15 +118,15 @@ function PASPERK_ArmorRegen(ply)
 			
 		
 		if ply.IsRegening == true then
-			regensound:ChangePitch(50+ply:Armor(),0)
+			--regensound:ChangePitch(50+ply:Armor(),0)
 			if ply.RegenSound == false then
-				regensound:Play()
+				--regensound:Play()
 				regensound:ChangeVolume(0.75,0)
-				ply.RegenSound = true
+				--ply.RegenSound = true
 			end
 		else
 			if ply.RegenSound == true then
-				regensound:Stop()
+				--regensound:Stop()
 				ply.RegenSound = false
 			end
 		end
@@ -133,12 +134,12 @@ function PASPERK_ArmorRegen(ply)
 		if ply:Armor() <= 0 then
 			if ply.BeepArmorTick <= CurTime() then
 				ply.BeepArmorTick = CurTime() + 0.1
-				ply:EmitSound("buttons/button17.wav",50,100)
+				--ply:EmitSound("buttons/button17.wav",50,100)
 			end
 		elseif ply:Armor() <= 25 then
 			if ply.BeepArmorTick <= CurTime() then
 				ply.BeepArmorTick = CurTime() + 0.25
-				ply:EmitSound("buttons/button17.wav",50,125)
+				--ply:EmitSound("buttons/button17.wav",50,125)
 			end
 		end
 
@@ -157,7 +158,7 @@ function PASPERK_ArmorRegen(ply)
 		else
 			ply.IsRegening = false
 			if ply.RegenSound == true then
-				regensound:Stop()
+				--regensound:Stop()
 				ply.RegenSound = false
 			end
 		end	   
@@ -222,7 +223,7 @@ function PASPERK_Bleedout(ply)
 						ply:TakeDamage(1000,ply,ply)
 					end
 				end
-				ply.HealthTick = CurTime() + 0.1
+				ply.HealthTick = CurTime() + 0.25
 			end
 		else
 			if ply.HealthTick <= CurTime() then
@@ -231,12 +232,68 @@ function PASPERK_Bleedout(ply)
 				else
 					ply:SetHealth(100)
 				end
-				ply.HealthTick = CurTime() + 0.75
+				ply.HealthTick = CurTime() + 0.25
 			end
 		end
 		
 		
 	end
+end
+
+function PASPERK_Cannon(ply)
+
+	if TableSearcher(ply.ClassNumber,"Cannon") == true then	
+	
+		local Weapon = ply:GetActiveWeapon()
+	
+		if IsValid(Weapon) then
+			if Weapon:IsScripted() then
+		
+				local WeaponClass = Weapon:GetClass()
+				local GlobalWeapon = weapons.GetStored(WeaponClass)
+				
+				if Weapon.Primary.Delay then
+				
+					if Weapon.Primary.Delay == GlobalWeapon.Primary.Delay then
+					
+						Weapon.Primary.Delay = Weapon.Primary.Delay * (1 - 0.25)
+						
+					end
+					
+				end
+				
+				if Weapon.Primary.ClipSize then
+				
+					if Weapon.Primary.ClipSize == GlobalWeapon.Primary.ClipSize then
+					
+						Weapon.Primary.ClipSize = Weapon.Primary.ClipSize * 2
+						
+						Weapon:SetClip1(Weapon.Primary.ClipSize)
+						
+					end
+					
+				end
+				
+				--[[
+				if Weapon.Primary.Automatic == false then
+						
+					Weapon.Primary.Automatic = true
+						
+				end
+				--]]
+				
+				--[[
+				if ply:GetViewModel():GetPlaybackRate() ~= 0.5 then
+					ply:GetViewModel():SetPlaybackRate(0.5)
+				end
+				--]]
+			
+			end
+	
+		end
+		
+	end
+	
 end
 
 function PASPERK_Cloak(ply)

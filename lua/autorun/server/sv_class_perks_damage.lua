@@ -38,6 +38,7 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 			DamageData = DMGPERK_DamageTrade1(DamageData)
 			DamageData = DMGPERK_DamageTrade2(DamageData)
 			DamageData = DMGPERK_ReflectDamage1(DamageData) -- Damage Reduction
+			DamageData = DMGPERK_Cannon(DamageData)
 			
 			--DAMAGE AVOIDANCE
 			DamageData = DMGPERK_FakeDeath1(DamageData)
@@ -55,10 +56,11 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 			DamageData = DMGPERK_Reversal(DamageData)
 			DamageData = DMGPERK_SoulAbsorb(DamageData)
 			DamageData = DMGPERK_Stunner(DamageData)
+			DamageData = DMGPERK_Drain(DamageData)
 			
 			--MISC
 			DamageData = DMGPERK_ArmorRegen(DamageData)
-			DamageData = DMGPERK_Drain(DamageData) -- USELESS
+			
 			--DamageData = DMGPERK_Slayer(DamageData)
 			
 			
@@ -227,6 +229,18 @@ function DMGPERK_BrainDamage(DamageData)
 	
 end
 
+function DMGPERK_Cannon(DamageData)
+
+	if DamageChecker(DamageData) == false then return DamageData end
+	
+	if TableSearcher(DamageData.Attacker.ClassNumber,"Cannon") == true then
+		DamageData.Damage = DamageData.Damage * 0.75
+	end
+	
+	return DamageData
+	
+end
+
 function DMGPERK_DamageTrade1(DamageData)
 
 	if DamageChecker(DamageData) == false then return DamageData end
@@ -252,23 +266,23 @@ function DMGPERK_DamageTrade2(DamageData)
 end
 
 
-function DMGPERK_Drain(DamageData) --Useless 
+function DMGPERK_Drain(DamageData)
 
 	if DamageChecker(DamageData) == false then return DamageData end
 	
 	if TableSearcher(DamageData.Attacker.ClassNumber,"Drain") == true then
 	
-		if DamageData.Victim.Energy - DamageData.Damage*0.5 > 0 then
-			DamageData.Victim.Energy = DamageData.Victim.Energy - DamageData.Damage*0.5
-		else
-			DamageData.Victim.Energy = 0
-		end
+		timer.Create(DamageData.Attacker:EntIndex() .. "_" .. DamageData.Victim:EntIndex(), 0.5 , 5, function()
+		
+			if DamageData.Victim:Alive() then
+			
+				DamageData.Victim:SetHealth( math.max(1,DamageData.Victim:Health() - 1) ) 
+			
+			end
 		
 		
 		
-		DamageScale = DamageScale*1.1
-		
-		DamageData.Damage = DamageData.Damage * DamageScale
+		end)
 		
 	end
 	
@@ -504,6 +518,8 @@ function DMGPERK_HeadshotHunter(DamageData)
 		
 		DamageData.Damage = DamageData.Damage * DamageScale
 		
+		print(DamageScale)
+		
 	end
 	
 	return DamageData
@@ -726,7 +742,9 @@ function DMGPERK_Survivor(DamageData)
 	if DamageChecker(DamageData) == false then return DamageData end
 
 	if TableSearcher(DamageData.Victim.ClassNumber,"Survivor") == true then
-		DamageData.Damage = DamageData.Damage * ( 1 - math.Clamp(DamageData.Attacker:GetMaxHealth()-DamageData.Attacker:Health(),0,50)/100 )
+		local DamageScale = 1 - math.Clamp( (DamageData.Victim:GetMaxHealth() - DamageData.Victim:Health()) / 100 ,0,0.5)
+		print(DamageScale)
+		DamageData.Damage = DamageData.Damage * DamageScale
 	end	
 	
 	return DamageData
