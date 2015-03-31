@@ -7,6 +7,13 @@ function FirstClassSpawn( ply )
 	ply:SetNWInt("classnum",ply.ClassNumber)
 	ply:SetNWInt("stamina",Class[ply.ClassNumber]["stamina"])
 	ply.Energy = Class[ply.ClassNumber]["stamina"]
+	
+	
+	ply:SendLua(
+		[[chat.AddText(Color(255,255,255), "This server is running ClassMod BETA. Press",Color(0,255,0)," F3 ",Color(255,255,255),Color(255,255,255),"to access the class menu.")]]
+	)
+	
+	
 end
 
 hook.Add( "PlayerInitialSpawn", "Initialize Class", FirstClassSpawn )

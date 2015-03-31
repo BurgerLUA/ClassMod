@@ -707,7 +707,7 @@ function DMGPERK_Splash(DamageData)
 		for k,v in pairs (player.GetAll()) do
 			
 			if v ~= DamageData.Victim and v ~= DamageData.Attacker then		
-				if (v:Team() == DamageData.Attacker:Team() and DamageData.Victim:Team() == 1001) or (result[i]:Team() ~= DamageData.Attacker:Team() and DamageData.Victim:Team() ~= 1001) then
+				if (v:Team() == DamageData.Attacker:Team() and DamageData.Victim:Team() == 1001) or (DamageData.Victim:Team() ~= DamageData.Attacker:Team() and DamageData.Victim:Team() ~= 1001) then
 					v:TakeDamage(DamageData.Damage*0.03,  DamageData.Attacker, DamageData.Attacker:GetActiveWeapon())
 					
 					v:EmitSound("weapons/fist_hit_world1.wav",50,math.random(90,110))
