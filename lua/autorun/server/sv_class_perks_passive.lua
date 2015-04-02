@@ -20,6 +20,7 @@ function CheckPerks()
 			PASPERK_Medic(v)
 			PASPERK_Mystical(v)
 			PASPERK_Necro(v)
+			PASPERK_None(v)
 			PASPERK_Poop(v)
 			PASPERK_Rambo(v)
 			PASPERK_Slayer(v)
@@ -252,16 +253,6 @@ function PASPERK_Cannon(ply)
 				local WeaponClass = Weapon:GetClass()
 				local GlobalWeapon = weapons.GetStored(WeaponClass)
 				
-				if Weapon.Primary.Delay then
-				
-					if Weapon.Primary.Delay == GlobalWeapon.Primary.Delay then
-					
-						Weapon.Primary.Delay = Weapon.Primary.Delay * (1 - 0.25)
-						
-					end
-					
-				end
-				
 				if Weapon.Primary.ClipSize then
 				
 					if Weapon.Primary.ClipSize == GlobalWeapon.Primary.ClipSize then
@@ -457,6 +448,29 @@ function PASPERK_Necro(ply)
 		if ply:GetMaxHealth() ~= 1 then 
 			ply:SetMaxHealth(1)
 		end
+	end
+end
+
+function PASPERK_None(ply)
+	if TableSearcher(ply.ClassNumber,"None") then
+
+		if not ply.NextAnnoyingMessage then
+			ply.NextAnnoyingMessage = 1
+		end
+		
+		if ply.NextAnnoyingMessage <= CurTime() then
+			
+			ply:SendLua(
+				[[chat.AddText(Color(255,255,255), "This server is running ClassMod BETA. Press",Color(0,255,0)," F3 ",Color(255,255,255),Color(255,255,255),"to access the class menu.")]]
+			)
+			
+			ply.NextAnnoyingMessage = CurTime() + 120
+			
+		end
+	
+	
+	
+	
 	end
 end
 

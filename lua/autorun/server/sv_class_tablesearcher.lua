@@ -3,7 +3,7 @@ function TableSearcher(num,tofind)
 
 	
 	if Class[num] == nil then return false end
-	if Class[num]["perks"][1] == "none" then return false end
+	--if Class[num]["perks"][1] == "none" then return false end
 
 	--print("Trying to find " .. tofind)
 	

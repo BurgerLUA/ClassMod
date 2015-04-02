@@ -24,6 +24,7 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 			DamageData = DMGPERK_Forced(DamageData)
 			
 			--DAMAGE MULTIFPLICATION
+			DamageData = DMGPERK_BasedHealthDamage(DamageData)
 			DamageData = DMGPERK_Trap(DamageData)
 			DamageData = DMGPERK_Shatter(DamageData)
 			DamageData = DMGPERK_AP(DamageData)
@@ -75,7 +76,7 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 			--ply:SetNWInt(attacker:EntIndex(), ply:GetNWInt(attacker:EntIndex()) + (HiddenScale * DamageScale * dmginfo:GetBaseDamage()))
 			
 			if OldDamage ~= DamageData.Damage then
-				print(OldDamage .. "=>" .. DamageData.Damage)
+				print(dmginfo:GetAttacker():Nick() .. " to " .. ply:Nick() .. ": ",OldDamage .. "=>" .. DamageData.Damage)
 			end
 			
 			if DamageData.Damage then
@@ -201,6 +202,34 @@ function DMGPERK_Bargain(DamageData)
 			DamageData.Victim:EmitSound("weapons/fx/rics/ric"..math.random(1,5)..".wav",50,100)
 			DamageData.Attacker:EmitSound("weapons/fx/rics/ric"..math.random(1,5)..".wav",50,100)
 		end
+		
+	end
+	
+	return DamageData
+	
+end
+
+function DMGPERK_BasedHealthDamage(DamageData)
+
+	if DamageChecker(DamageData) == false then return DamageData end
+	
+	if TableSearcher(DamageData.Attacker.ClassNumber,"BasedHealthDamage") == true then
+	
+		local Mul =  (DamageData.Victim:Health() + DamageData.Victim:Armor()) / 100 
+
+		--print(DamageData.Attacker:Health(),DamageData.Attacker:Armor(), Mul)
+		
+		DamageData.Damage = DamageData.Damage * Mul
+		
+		print("MULTIPLIER: " .. Mul)
+		
+		--if Mul >= then
+			DamageData.Attacker:EmitSound("buttons/bell1.wav",100,math.Clamp(Mul*100,50,200) )
+		--else
+		--	ply:EmitSound("buttons/bell1.wav",100,Mul*100)
+		--end
+		
+		
 		
 	end
 	
@@ -707,7 +736,7 @@ function DMGPERK_Splash(DamageData)
 		for k,v in pairs (player.GetAll()) do
 			
 			if v ~= DamageData.Victim and v ~= DamageData.Attacker then		
-				if (v:Team() == DamageData.Attacker:Team() and DamageData.Victim:Team() == 1001) or (DamageData.Victim:Team() ~= DamageData.Attacker:Team() and DamageData.Victim:Team() ~= 1001) then
+				if (v:Team() == DamageData.Attacker:Team() and DamageData.Attacker:Team() == 1001) or (v:Team() ~= DamageData.Attacker:Team() and v:Team() ~= 1001) then
 					v:TakeDamage(DamageData.Damage*0.03,  DamageData.Attacker, DamageData.Attacker:GetActiveWeapon())
 					
 					v:EmitSound("weapons/fist_hit_world1.wav",50,math.random(90,110))

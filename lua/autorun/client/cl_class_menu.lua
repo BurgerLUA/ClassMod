@@ -56,28 +56,37 @@ function ClassSelectorDerma()
 		end
 		MenuBase:MakePopup()
 		
+	local ApplyButton = vgui.Create("DColorButton")
+		ApplyButton:SetParent(MenuBase)
+		ApplyButton:SetPos(ScrW()*0.05,ScrH()*0.9 + 20)
+		ApplyButton:SetSize( ScrW()*0.90 - 50 , ScrH()*0.1 - 50)
+		ApplyButton:SetColor(Color(0,255,0,255))
+		function ApplyButton:DoClick()
+			RunConsoleCommand("changeclass",LocalPlayer().SelectedClass)
+			MenuBase:Close()
+		end
+		
+	local ButtonText = vgui.Create("DLabel")
+		ButtonText:SetParent(ApplyButton)
+		ButtonText:SetPos(ApplyButton:GetWide()/2 - 100,ApplyButton:GetTall()/2 - 12)
+		ButtonText:SetText("APPLY CLASS")
+		ButtonText:SetFont("DermaLarge")
+		ButtonText:SetColor(Color(0,0,0,255))
+		ButtonText:SizeToContents(true)
+		function ButtonText:DoClick()
+			RunConsoleCommand("changeclass",LocalPlayer().SelectedClass)
+			MenuBase:Close()
+		end
+		
+		
+		
 	local Showoff = vgui.Create("DLabel")
 		Showoff:SetParent(MenuBase)
 		Showoff:SetPos(50,60)
 		Showoff:SetFont("DermaLarge")
 		Showoff:SetText("Class Count: " .. table.Count(Class))
 		Showoff:SizeToContents(true)
-		
 
-
-	local MenuBar = vgui.Create( "DMenuBar")
-		MenuBar:SetParent(MenuBase)
-		MenuBar:DockMargin( -3,-6,-3,0 ) --corrects MenuBar pos
-
-	local M1 = MenuBar:AddMenu( "File" )
-		M1:AddOption( "Save", function() RunConsoleCommand("changeclass",LocalPlayer().SelectedClass) end ):SetIcon( "icon16/page_white_go.png" )
-		M1:AddOption( "Exit", function() MenuBase:Close() end ):SetIcon( "icon16/folder_go.png" )
-
-	local M2 = MenuBar:AddMenu( "Help" )
-		M2:AddOption( "Filler", function() end )
-		
-		
-		
 		
 	local Scroll = vgui.Create( "DScrollPanel", MenuBase )
 		Scroll:SetSize( ScrW()*0.90 + 10 , ScrH()*0.8 )
