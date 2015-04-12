@@ -6,6 +6,8 @@ function CheckPerks()
 			ply.first = false
 			ply.HasChangedClass = false
 		else
+		
+			UNQPERK_VictimStagger(v)
 
 			PASPERK_Annoying(v)
 			PASPERK_ArcLight(v)
@@ -38,15 +40,68 @@ end
 hook.Add("Think", "Check Perks Think", CheckPerks)
 
 
+function UNQPERK_VictimStagger(ply)
+
+	if ply.Poison then
+		
+		if not ply.PoisonTickTable then
+			ply.PoisonTickTable = {}
+		end
+
+		
+		for k,v in pairs(ply.Poison) do
+		
+			if not ply.PoisonTickTable[k] then
+				ply.PoisonTickTable[k] = 0
+			end
+		
+			if (k:Team() == ply:Team() and ply:Team() == 1001) or (k:Team() ~= ply:Team() and k:Team() ~= 1001) then
+		
+		
+				if ply.PoisonTickTable[k] <= CurTime() then
+			
+					if v ~= 0 then
+						local Amount = v / 2
+						
+						if k:IsValid() then
+							ply:TakeDamage(Amount + 10,k,k)
+							ply:EmitSound("npc/headcrab_poison/ph_hiss1.wav",100,100)
+						end
+						
+						if Amount >= 1 then
+							ply.Poison[k] = Amount
+						else
+							ply.Poison[k] = 0
+						end
+					end
+					
+					ply.PoisonTickTable[k] = CurTime() + 1
+					
+				end
+
+				if ply:Health() < 10 then
+					ply:TakeDamage(ply:Health(),k,k)
+				end
+			
+			end
+			
+		end
+		
+		if ply:Health() <= 0 then
+			ply.Poison = nil
+		end
+	
+	end
+
+end
+
 
 function PASPERK_Annoying(ply)
 
 	if TableSearcher(ply.ClassNumber,"Annoying") == true then	
 	
-		if ply.first == false then
-			ply.LifeStealTick = 0
-			
-			ply.first = true
+		if not ply.LifeStealTick then
+			ply.LifeStealTick = 1
 		end
 		
 		if ply.LifeStealTick <= CurTime() then
@@ -338,12 +393,8 @@ function PASPERK_DeadLight(ply)
 		if ply.DeadLifeTick <= CurTime() then
 			ply.DeadLifeTick = CurTime() + 3
 		
-			if ply:Health() < 50 then
+			if ply:Health() < 100 then
 				ply:SetHealth(ply:Health() + 1)
-			end
-			
-			if ply:Armor() < 50 then
-				ply:SetArmor(ply:Armor() + 1)
 			end
 
 		end

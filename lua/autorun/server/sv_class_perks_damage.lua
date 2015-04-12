@@ -16,12 +16,14 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 			--HARD DAMAGE PREVETION
 			DamageData = DMGPERK_Evasion(DamageData)
 			
+			--UNIQUE DAMAGE MODIFIERS
+			DamageData = DMGPERK_Forced(DamageData)
+			
 			--DAMAGE SUBTRACTION
 			DamageData = DMGPERK_Shield(DamageData)
 			DamageData = DMGPERK_FrontDoor(DamageData)
 			DamageData = DMGPERK_BackDoor(DamageData)
 			DamageData = DMGPERK_Bargain(DamageData)
-			DamageData = DMGPERK_Forced(DamageData)
 			
 			--DAMAGE MULTIFPLICATION
 			DamageData = DMGPERK_BasedHealthDamage(DamageData)
@@ -36,10 +38,10 @@ function ScaleClassDamage( ply, hitgroup, dmginfo )
 			DamageData = DMGPERK_Helmet(DamageData)
 			DamageData = DMGPERK_Kevlar(DamageData)
 			DamageData = DMGPERK_Survivor(DamageData)
-			DamageData = DMGPERK_DamageTrade1(DamageData)
-			DamageData = DMGPERK_DamageTrade2(DamageData)
+			DamageData = DMGPERK_DamageBuff(DamageData)
 			DamageData = DMGPERK_ReflectDamage1(DamageData) -- Damage Reduction
 			DamageData = DMGPERK_Cannon(DamageData)
+			DamageData = DMGPERK_Stagger(DamageData)
 			
 			--DAMAGE AVOIDANCE
 			DamageData = DMGPERK_FakeDeath1(DamageData)
@@ -270,30 +272,17 @@ function DMGPERK_Cannon(DamageData)
 	
 end
 
-function DMGPERK_DamageTrade1(DamageData)
+function DMGPERK_DamageBuff(DamageData)
 
 	if DamageChecker(DamageData) == false then return DamageData end
 	
-	if TableSearcher(DamageData.Victim.ClassNumber,"DamageTrade") == true then
+	if TableSearcher(DamageData.Attacker.ClassNumber,"DamageBuff") == true then
 		DamageData.Damage = DamageData.Damage * 1.3
 	end
 	
 	return DamageData
 	
 end
-	
-function DMGPERK_DamageTrade2(DamageData)
-
-	if DamageChecker(DamageData) == false then return DamageData end
-
-	if TableSearcher(DamageData.Attacker.ClassNumber,"DamageTrade") == true then
-		DamageData.Damage = DamageData.Damage * 1.3
-	end
-	
-	return DamageData
-	
-end
-
 
 function DMGPERK_Drain(DamageData)
 
@@ -503,8 +492,12 @@ function DMGPERK_Forced(DamageData)
 
 	if TableSearcher(DamageData.Attacker.ClassNumber,"Forced") == true then
 	
-		DamageData.Damage = math.max(1,DamageData.Damage - 50) * 3
-	
+		if DamageData.Damage > 70 then
+			DamageData.Damage = 100
+		else
+			DamageData.Damage = 25
+		end
+
 	end
 	
 	return DamageData
@@ -737,14 +730,47 @@ function DMGPERK_Splash(DamageData)
 			
 			if v ~= DamageData.Victim and v ~= DamageData.Attacker then		
 				if (v:Team() == DamageData.Attacker:Team() and DamageData.Attacker:Team() == 1001) or (v:Team() ~= DamageData.Attacker:Team() and v:Team() ~= 1001) then
-					v:TakeDamage(DamageData.Damage*0.03,  DamageData.Attacker, DamageData.Attacker:GetActiveWeapon())
-					
-					v:EmitSound("weapons/fist_hit_world1.wav",50,math.random(90,110))
-					
+
+					if DamageData.Damage*0.03 >= 1 then
+						v:SetHealth(math.max(1,v:Health() - 1))
+						v:EmitSound("weapons/fist_hit_world1.wav",50,math.random(90,110))
+					end
+
 				end
 			end
 				
 		end
+	end
+	
+	return DamageData
+	
+end
+
+function DMGPERK_Stagger(DamageData)
+
+	if DamageChecker(DamageData) == false then return DamageData end
+
+	if TableSearcher(DamageData.Attacker.ClassNumber,"Stagger") == true then
+		
+
+		if (DamageData.Attacker:Team() == DamageData.Victim:Team() and DamageData.Victim:Team() == 1001) or (DamageData.Attacker:Team() ~= DamageData.Victim:Team() and DamageData.Attacker:Team() ~= 1001) then
+			
+			if not DamageData.Victim.Poison then 
+				DamageData.Victim.Poison = {}
+			end
+			
+			if not DamageData.Victim.Poison[DamageData.Attacker] then
+				DamageData.Victim.Poison[DamageData.Attacker] = 0
+			end
+
+			DamageData.Victim.Poison[DamageData.Attacker] = DamageData.Victim.Poison[DamageData.Attacker] + DamageData.Damage
+			DamageData.Attacker:EmitSound("npc/headcrab_poison/ph_poisonbite1.wav",100,100)
+		end
+		
+		DamageData.Damage = DamageData.Damage * 0.1
+		
+		
+	
 	end
 	
 	return DamageData
